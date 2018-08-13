@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import './product_control.dart';
+import './pages/product.dart';
 
 class Products extends StatelessWidget {
-  final List<String> _products; // final to be immutable since stateless
+  final List<Map<String, dynamic>> _products; // final to be immutable since stateless
   final Function removeProduct;
   Products(this.removeProduct, [this._products = const []]) {
     // Optional positional args wrapped in brackets and default values must be const
@@ -16,9 +17,28 @@ class Products extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset('assets/your_own_empty_heart.jpg'),
-          Text(_products[index]),
-          ProductControl(removeProduct, 'Remove Propaganda', index)
+          Image.asset(_products[index]['imageUrl']),
+          Text(_products[index]['title']),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(
+                child: Text('Details'),
+                onPressed: () => Navigator.push<bool>( // Tell the type of the future
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Product(_products[index], )
+                    ),
+                ).then((value) {
+                  if (value) {
+                    removeProduct(index);
+                  }
+                }),
+              ),
+              ProductControl(
+                  removeProduct, 'Remove', index, Theme.of(context).errorColor),
+            ],
+          )
         ],
       ),
     );

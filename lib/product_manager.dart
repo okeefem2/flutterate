@@ -20,14 +20,14 @@ class ProductManager extends StatefulWidget {
 }
 
 class _ProductManagerState extends State<ProductManager> {
-  final List<String> _products = []; // final, can't change reference
+  final List<Map<String, dynamic>> _products = []; // final, can't change reference
 
   @override
   void initState() {
     // Called third
     super.initState(); // Best practice to call super first
     if (widget.initialProduct != null) {
-      _products.add(widget.initialProduct);
+      _products.add({ 'title': 'The Ultimate Weight Loss Program', 'imageUrl': 'assets/your_own_empty_heart.jpg' });
     }
   }
 
@@ -38,11 +38,11 @@ class _ProductManagerState extends State<ProductManager> {
     super.didUpdateWidget(oldWidget);
   }
 
-  void _addProduct(String product) {
+  void _addProduct(Map<String, dynamic> product) {
     print('adding a product');
     print(product);
     setState(() {
-      _products.add(product);
+      _products.add({ 'title': 'Run Before The Void', 'imageUrl': 'assets/your_own_empty_heart.jpg'  });
     });
     print(_products);
   }
@@ -66,10 +66,11 @@ class _ProductManagerState extends State<ProductManager> {
         Container(
             margin: EdgeInsets.all(10.0),
             child: ProductControl(
-                _addProduct, 'Add Propaganda', 'You cannot escape the void')),
+                _addProduct, 'Add Propaganda', { 'title': 'Weird At Last', 'imageUrl': 'assets/your_own_empty_heart.jpg' }, Theme.of(context).accentColor), 
+        ),
         Expanded(
-            child: Products(_removeProduct,
-                _products)), // Expanded takes remaining space after other widgets
+            child: Products(_removeProduct, _products)
+        ), // Expanded takes remaining space after other widgets
       ],
     );
   }

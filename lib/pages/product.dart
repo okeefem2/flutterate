@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class Product extends StatelessWidget {
   final Map<String, dynamic> _product;
@@ -6,7 +7,17 @@ class Product extends StatelessWidget {
   Product(this._product);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope( // widget that registers a callback listening to the back button
+      onWillPop: () {
+        print('back button pressed');
+        // Since this is implemented, default functionality is not valid
+        // We need to navigate manually now
+        Navigator.pop(context, false);
+        return Future.value(false); // This is were route guards can be implemented
+        // returning false in this case because we are manually calling pop, otherwise the app will try to pop again when
+        // This method resolves as true
+      },
+      child: Scaffold(
       appBar: AppBar(title: Text(_product['title'])),
       body: Center(
           child: Column(
@@ -26,6 +37,7 @@ class Product extends StatelessWidget {
           ),
         ],
       )),
+    )
     );
   }
 }

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import './product_manager.dart';
 import './pages/home.dart';
+import './pages/auth.dart';
+import './pages/products_admin.dart';
+import './pages/product.dart';
+
 void main() {
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
@@ -19,7 +23,28 @@ class Flutterate extends StatelessWidget {
         primarySwatch: Colors.green,
         accentColor: Colors.greenAccent
       ),
-      home: Home()
+      home: AuthPage(),
+      routes: {
+        '/home': (BuildContext context) => Home(), // Can't make it just '/' since we have a home page defined
+        '/admin': (BuildContext context) => ProductsAdminPage(),
+      },
+      onGenerateRoute: (RouteSettings settings) {
+        final List<String> pathElements = settings.name.split('/');
+        if (pathElements[0] != '') {
+          return null;
+        }
+        var route = null;
+        switch (pathElements[1]) {
+          case 'product':
+            final int index = int.parse(pathElements[2]);
+            route = MaterialPageRoute(builder: (BuildContext context) => Product(_products[index]))
+            break;
+          default:
+            route = null;
+            break;
+        }
+        return route;
+      }, // Executes when routing to a named route that is not registered in routes
     ); // No new keyword needed in dart
   }
 }

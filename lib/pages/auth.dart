@@ -27,7 +27,7 @@ class _AuthPageState extends State<AuthPage> {
         ),
         body: Container(
             margin: EdgeInsets.all(8.0),
-            child: ListView(
+            child: ListView( // make sure to use listview so content is scrollable
               children: <Widget>[
                 TextField(
                   decoration: InputDecoration(
@@ -40,6 +40,7 @@ class _AuthPageState extends State<AuthPage> {
                       email = change;
                     });
                   },
+                  keyboardType: TextInputType.emailAddress,
                 ),
                 TextField(
                   decoration: InputDecoration(

@@ -3,6 +3,11 @@ import '../product_manager.dart';
 import './products_admin.dart';
 
 class Home extends StatelessWidget {
+
+  final List<Map<String, dynamic>> products;
+
+  Home(this.products);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,14 +22,13 @@ class Home extends StatelessWidget {
           title: Text('Manage Products'),
           onTap: () {
             Navigator.pushReplacementNamed(context, '/admin');
-                
           },
         )
       ])),
       appBar: AppBar(
         title: Text('Bloodstone Rituals'),
       ),
-      body: ProductManager(initialProduct: 'Ultimate Weight Loss Program'),
-    );
+      body: ProductManager(products,
+    ));
   }
 }

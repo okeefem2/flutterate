@@ -11,33 +11,64 @@ void main() {
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
   runApp(Flutterate());
-} 
+}
 
-class Flutterate extends StatelessWidget {
+class Flutterate extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _FlutterateState();
+  }
+}
+// final means cannot change the reference
+// const makes completely immutable, cannot change the value of the var
+// String a = const 'hello world'
+
+class _FlutterateState extends State<Flutterate> {
+  final List<Map<String, dynamic>> _products = [];
+
+  void _addProduct(Map<String, dynamic> product) {
+    print('adding a product');
+    print(product);
+    setState(() {
+      product['imageUrl'] = 'assets/your_own_empty_heart.jpg';
+      _products.add(product);
+    });
+    print(_products);
+  }
+
+  void _removeProduct(int index) {
+    print('removing');
+    print(index);
+    setState(() {
+      _products.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       // debugShowMaterialGrid: true,
       theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.green,
-        accentColor: Colors.greenAccent
-      ),
+          brightness: Brightness.light,
+          primarySwatch: Colors.green,
+          accentColor: Colors.greenAccent),
       home: AuthPage(),
       routes: {
-        '/home': (BuildContext context) => Home(), // Can't make it just '/' since we have a home page defined
-        '/admin': (BuildContext context) => ProductsAdminPage(),
+        '/home': (BuildContext context) =>
+            Home(_products), // Can't make it just '/' since we have a home page defined
+        '/admin': (BuildContext context) => ProductsAdminPage(_products, _addProduct, _removeProduct),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
         if (pathElements[0] != '') {
           return null;
         }
-        var route = null;
+        var route;
         switch (pathElements[1]) {
           case 'product':
             final int index = int.parse(pathElements[2]);
-            route = MaterialPageRoute(builder: (BuildContext context) => Product(_products[index]))
+            route = MaterialPageRoute<bool>(
+                builder: (BuildContext context) => Product(_products[index]));
             break;
           default:
             route = null;
@@ -45,13 +76,15 @@ class Flutterate extends StatelessWidget {
         }
         return route;
       }, // Executes when routing to a named route that is not registered in routes
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          builder: (BuildContext context) =>
+            Home(_products)
+        );
+      }, // Executes when a route is not matched, for example when re return a null from onGenerateRoute
     ); // No new keyword needed in dart
   }
 }
-// final means cannot change the reference
-// const makes completely immutable, cannot change the value of the var
-// String a = const 'hello world'
-
 
 // Scaffold builds an empty page that can be configured
 // class Flutterate extends StatelessWidget {

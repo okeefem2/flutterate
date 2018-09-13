@@ -9,3 +9,11 @@ class ClassName extends StatelessWidget {
     );
   } 
 }
+
+class Flutterate extends StatefulWidget {
+  @override
+    State<StatefulWidget> createState() {
+      // TODO: implement createState
+      return null;
+    }
+}

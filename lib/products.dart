@@ -4,8 +4,7 @@ import './pages/product.dart';
 
 class Products extends StatelessWidget {
   final List<Map<String, dynamic>> _products; // final to be immutable since stateless
-  final Function removeProduct;
-  Products(this.removeProduct, [this._products = const []]) {
+  Products([this._products = const []]) {
     // Optional positional args wrapped in brackets and default values must be const
     // This is executed first in lifecycle
     // Is also called when the input changes
@@ -24,19 +23,16 @@ class Products extends StatelessWidget {
             children: <Widget>[
               FlatButton(
                 child: Text('Details'),
-                onPressed: () => Navigator.push<bool>( // Tell the type of the future
+                onPressed: () => 
+                Navigator.pushNamed<bool>( // Tell the type of the future
                     context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Product(_products[index], )
-                    ),
+                    '/product/' + index.toString()
                 ).then((value) {
                   if (value) {
-                    removeProduct(index);
+                    // removeProduct(index);
                   }
                 }),
               ),
-              ProductControl(
-                  removeProduct, 'Remove', index, Theme.of(context).errorColor),
             ],
           )
         ],

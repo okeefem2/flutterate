@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Widget for creating a raised button, color, text and press callback are all configurable
 class ProductControl extends StatelessWidget {
   final Function pressCallback;
   final String buttonText;

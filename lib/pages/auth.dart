@@ -8,8 +8,8 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String email = '';
-  String password = '';
+  String _email = '';
+  String _password = '';
   bool _obscurePassword = true;
   void _toggleObscurePassword() {
     setState(() {
@@ -37,7 +37,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                   onChanged: (String change) {
                     setState(() {
-                      email = change;
+                      _email = change;
                     });
                   },
                   keyboardType: TextInputType.emailAddress,
@@ -48,7 +48,7 @@ class _AuthPageState extends State<AuthPage> {
                     contentPadding: EdgeInsets.all(8.0),
                   ),
                   onChanged: (String change) {
-                    password = change;
+                    _password = change;
                   },
                   obscureText: _obscurePassword,
                 ),

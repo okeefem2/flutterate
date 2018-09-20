@@ -1,8 +1,3 @@
-# flutterate
+# Flutterate!
 
-A new Flutter project.
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+An example flutter app built by following along with Max Schwarzmueller's Udemy course https://www.udemy.com/learn-flutter-dart-to-build-ios-android-apps/learn/v4/overview

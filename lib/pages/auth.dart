@@ -11,6 +11,7 @@ class _AuthPageState extends State<AuthPage> {
   String _email = '';
   String _password = '';
   bool _obscurePassword = true;
+  bool _agreedToTerms = false;
   void _toggleObscurePassword() {
     setState(() {
       _obscurePassword = !_obscurePassword;
@@ -27,7 +28,8 @@ class _AuthPageState extends State<AuthPage> {
         ),
         body: Container(
             margin: EdgeInsets.all(8.0),
-            child: ListView( // make sure to use listview so content is scrollable
+            child: ListView(
+              // make sure to use listview so content is scrollable
               children: <Widget>[
                 TextField(
                   decoration: InputDecoration(
@@ -57,6 +59,15 @@ class _AuthPageState extends State<AuthPage> {
                       ? Icons.visibility
                       : Icons.visibility_off),
                   onPressed: _toggleObscurePassword,
+                ),
+                SwitchListTile(
+                  value: _agreedToTerms,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _agreedToTerms = value;
+                    });
+                  },
+                  title: Text('Weird At Last?'),
                 ),
                 Container(
                   margin: EdgeInsets.all(8.0),

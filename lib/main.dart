@@ -51,7 +51,9 @@ class _FlutterateState extends State<Flutterate> {
       theme: ThemeData(
           brightness: Brightness.light,
           primarySwatch: Colors.green,
-          accentColor: Colors.greenAccent),
+          accentColor: Colors.greenAccent,
+          // fontFamily: 'Oswald' TO change the whole app theme
+      ),
       home: AuthPage(),
       routes: {
         '/home': (BuildContext context) =>

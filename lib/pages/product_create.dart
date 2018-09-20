@@ -11,9 +11,9 @@ class ProductCreatePage extends StatefulWidget {
 }
 
 class _ProductCreatePageState extends State<ProductCreatePage> {
-  String title = '';
-  String description = '';
-  double price = 0.0;
+  String _title = '';
+  String _description = '';
+  double _price = 0.0;
   @override
   Widget build(BuildContext context) {
     // return Center(
@@ -39,7 +39,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
                   ),
               onChanged: (String change) {
                 setState(() {
-                  title = change;
+                  _title = change;
                 });
               },
             ),
@@ -50,7 +50,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               ),
               maxLines: 3,
               onChanged: (String change) {
-                description = change;
+                _description = change;
               },
             ),
             TextField(
@@ -60,7 +60,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               ),
               keyboardType: TextInputType.number,
               onChanged: (String change) {
-                price = double.parse(change);
+                _price = double.parse(change);
               },
             ),
             Container(
@@ -69,9 +69,9 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
                 color: Theme.of(context).accentColor,
                   onPressed: () {
                     final Map<String, dynamic> product = {
-                      'title': title,
-                      'description': description,
-                      'price': price
+                      'title': _title,
+                      'description': _description,
+                      'price': _price
                     };
                     widget.addProduct(product);
                     Navigator.pushReplacementNamed(context, '/home');

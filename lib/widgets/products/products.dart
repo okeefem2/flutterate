@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import './product_control.dart';
-import './pages/product.dart';
+import '../../product_control.dart';
+import '../../pages/product.dart';
+import './price_tag.dart';
 
 class Products extends StatelessWidget {
   final List<Map<String, dynamic>>
       _products; // final to be immutable since stateless
-  Products([this._products = const []]) {
+  final Function replaceProduct;
+  Products(this.replaceProduct, [this._products = const []]) {
     // Optional positional args wrapped in brackets and default values must be const
     // This is executed first in lifecycle
     // Is also called when the input changes
@@ -19,7 +21,7 @@ class Products extends StatelessWidget {
         children: <Widget>[
           Image.asset(_products[index]['imageUrl']),
           Container(
-              margin: EdgeInsets.only(top: 10.0),
+              margin: EdgeInsets.symmetric(vertical: 10.0),
               // padding: EdgeInsets.only(top: 10.0),
               // margin: EdgeInsets.symmetric(vertical: 10.0),
               child: Row(
@@ -37,22 +39,7 @@ class Products extends StatelessWidget {
                   SizedBox(
                     width: 10.0,
                   ),
-                  Container(
-                    child: Text(
-                      '\$${_products[index]['price'].toString()}',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        // fontFamily: 'Oswald' // This is how we would change the font, I don't like this one though
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.0),
-                      color: Theme.of(context).accentColor,
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  ),
+                  PriceTag(_products[index]['price'].toString())
                 ],
               )),
           // SizedBox(
@@ -72,8 +59,11 @@ class Products extends StatelessWidget {
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlatButton(
-                child: Text('Details'),
+              IconButton(
+                color: Theme.of(context).accentColor,
+                iconSize: 35.0,
+                icon: Icon(Icons.info),
+                // child: Text('Details'),
                 onPressed: () => Navigator
                         .pushNamed<bool>(
                             // Tell the type of the future
@@ -84,6 +74,16 @@ class Products extends StatelessWidget {
                         // removeProduct(index);
                       }
                     }),
+              ),
+              IconButton(
+                color: Colors.purple,
+                iconSize: 35.0,
+                icon: Icon(_products[index]['favorited'] == true ? Icons.favorite : Icons.favorite_border),
+                // child: Text('Details'),
+                onPressed: () { 
+                  _products[index]['favorited'] = !_products[index]['favorited'];
+                  replaceProduct(index, _products[index]);
+                }
               ),
             ],
           )

@@ -71,7 +71,8 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
                     final Map<String, dynamic> product = {
                       'title': _title,
                       'description': _description,
-                      'price': _price
+                      'price': _price,
+                      'favorited': false
                     };
                     widget.addProduct(product);
                     Navigator.pushReplacementNamed(context, '/home');

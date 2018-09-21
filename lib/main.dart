@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import './product_manager.dart';
-import './pages/home.dart';
+import './pages/products.dart';
 import './pages/auth.dart';
 import './pages/products_admin.dart';
 import './pages/product.dart';
@@ -44,6 +44,14 @@ class _FlutterateState extends State<Flutterate> {
     });
   }
 
+  void _replaceProduct(int index, Map<String, dynamic> product) {
+    print('replacing');
+    print(index);
+    setState(() {
+      _products[index] = product;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,7 +65,7 @@ class _FlutterateState extends State<Flutterate> {
       home: AuthPage(),
       routes: {
         '/home': (BuildContext context) =>
-            Home(_products), // Can't make it just '/' since we have a home page defined
+            Home(_products, _replaceProduct), // Can't make it just '/' since we have a home page defined
         '/admin': (BuildContext context) => ProductsAdminPage(_products, _addProduct, _removeProduct),
       },
       onGenerateRoute: (RouteSettings settings) {
@@ -81,7 +89,7 @@ class _FlutterateState extends State<Flutterate> {
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
           builder: (BuildContext context) =>
-            Home(_products)
+            Home(_products, _replaceProduct)
         );
       }, // Executes when a route is not matched, for example when re return a null from onGenerateRoute
     ); // No new keyword needed in dart

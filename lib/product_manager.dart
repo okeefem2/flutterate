@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import './products.dart';
+import './widgets/products/products.dart';
 import './product_control.dart';
 
+// Unused widget, keeping for comments
 class ProductManager extends StatelessWidget {
   // Widget is separate from the State so needs to be immutable
   // in the widget class
@@ -19,8 +20,9 @@ class ProductManager extends StatelessWidget {
   // }
 
   final List<Map<String, dynamic>> products;
+  final Function replaceProduct;
 
-  ProductManager(this.products);
+  ProductManager(this.products, this.replaceProduct);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +39,7 @@ class ProductManager extends StatelessWidget {
         //       Theme.of(context).accentColor),
         // ),
         Expanded(
-            child: Products(products)), // Expanded takes remaining space after other widgets
+            child: Products(replaceProduct, products)), // Expanded takes remaining space after other widgets
       ],
     );
   }

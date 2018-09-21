@@ -27,8 +27,16 @@ class _AuthPageState extends State<AuthPage> {
           title: Text('Login'),
         ),
         body: Container(
-            margin: EdgeInsets.all(8.0),
-            child: ListView(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.25), BlendMode.dstATop),
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/szeth.jpg'))),
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+                child: SingleChildScrollView(
+                    child: Column(
               // make sure to use listview so content is scrollable
               children: <Widget>[
                 TextField(
@@ -79,6 +87,6 @@ class _AuthPageState extends State<AuthPage> {
                       child: Text('Login')),
                 )
               ],
-            )));
+            )))));
   }
 }

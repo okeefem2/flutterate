@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../widgets/products/price_tag.dart';
+import '../widgets/shared/title_default.dart';
+import '../widgets/shared/address_tag.dart';
 // TODO start naming pages with page in it, I am confused bewtween pages and widgets sometimes
 class Product extends StatelessWidget {
   final Map<String, dynamic> _product;
@@ -33,6 +35,58 @@ class Product extends StatelessWidget {
         });
   }
 
+  Widget _buildTitlePriceRow() {
+    return Row(
+                mainAxisAlignment: MainAxisAlignment
+                    .center, // Main axis of a row is horizontal
+                children: <Widget>[
+                  TitleDefault(_product['title']),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  PriceTag(_product['price'].toString())
+                ],
+              );
+  }
+
+  Widget _buildDescriptionRow() {
+    return Row(
+                mainAxisAlignment: MainAxisAlignment
+                    .center, // Main axis of a row is horizontal
+                children: <Widget>[
+                  Text(
+                    _product['description'],
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      // fontFamily: 'Oswald' // This is how we would change the font, I don't like this one though
+                    ),
+                  ),
+                ],
+              );
+  }
+
+  Widget _buildButtonRow(BuildContext context) {
+    return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      IconButton(
+                          color: Colors.purple,
+                          iconSize: 35.0,
+                          icon: Icon(_product['favorited'] == true
+                              ? Icons.favorite
+                              : Icons.favorite_border),
+                          // child: Text('Details'),
+                          onPressed: () {}),
+                      IconButton(
+                        iconSize: 35.0,
+                        color: Theme.of(context).errorColor,
+                        icon: Icon(Icons.delete),
+                        onPressed: () => _showWarningDialog(context),
+                      ),
+                    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -55,59 +109,15 @@ class Product extends StatelessWidget {
             children: <Widget>[
               Image.asset(_product['imageUrl']),
               Container(
-                margin: EdgeInsets.all(10.0),
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment
-                    .center, // Main axis of a row is horizontal
-                children: <Widget>[
-                  Text(
-                    _product['title'],
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      // fontFamily: 'Oswald' // This is how we would change the font, I don't like this one though
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  PriceTag(_product['price'].toString())
-                ],
-              )),
+                margin: EdgeInsets.only(top: 10.0),
+                  child: _buildTitlePriceRow()
+              ),
               Container(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment
-                    .center, // Main axis of a row is horizontal
-                children: <Widget>[
-                  Text(
-                    _product['description'],
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      // fontFamily: 'Oswald' // This is how we would change the font, I don't like this one though
-                    ),
-                  ),
-                ],
-              )),
+                  margin: EdgeInsets.symmetric(vertical: 10.0),
+                  child: _buildDescriptionRow()),
+              AddressTag('Nightvale, USA'),
               Container(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      IconButton(
-                          color: Colors.purple,
-                          iconSize: 35.0,
-                          icon: Icon(_product['favorited'] == true
-                              ? Icons.favorite
-                              : Icons.favorite_border),
-                          // child: Text('Details'),
-                          onPressed: () {}),
-                      IconButton(
-                        iconSize: 35.0,
-                        color: Theme.of(context).errorColor,
-                        icon: Icon(Icons.delete),
-                        onPressed: () => _showWarningDialog(context),
-                      ),
-                    ]),
+                child: _buildButtonRow(context),
                 padding: EdgeInsets.all(10.0),
               ),
             ],

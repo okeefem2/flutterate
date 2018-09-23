@@ -60,6 +60,7 @@ class _FlutterateState extends State<Flutterate> {
           brightness: Brightness.light,
           primarySwatch: Colors.green,
           accentColor: Colors.greenAccent,
+          buttonColor: Colors.greenAccent
           // fontFamily: 'Oswald' TO change the whole app theme
       ),
       home: AuthPage(),

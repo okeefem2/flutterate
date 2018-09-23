@@ -18,8 +18,50 @@ class _AuthPageState extends State<AuthPage> {
     });
   }
 
+  DecorationImage _buildBackgroungImage() {
+    return DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.25), BlendMode.dstATop),
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/szeth.jpg'));
+  }
+
+  // TODO break out the text field builder from the product page to reduce code
+  Widget _buildTextField(String labelText, Function pressedCallback, {TextInputType keyboardType = TextInputType.text, bool obscureText = false}) {
+    return TextField(
+                  decoration: InputDecoration(
+                      labelText: labelText,
+                      contentPadding: EdgeInsets
+                          .all(8.0) // Puts padding inside of the textField
+                      ),
+                  onChanged: (String change) {
+                    setState(pressedCallback(change));
+                  },
+                  keyboardType: keyboardType,
+                  obscureText: obscureText,
+                );
+  }
+
+  Widget buildSwitch() {
+    return SwitchListTile(
+                  value: _agreedToTerms,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _agreedToTerms = value;
+                    });
+                  },
+                  title: Text('Weird At Last?'),
+                );
+  }
+
+  void _onSubmit() {
+    Navigator.pushReplacementNamed(context, '/admin');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final width = deviceWidth > 600.0 ? 400.0 : deviceWidth * 0.9;
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading:
@@ -28,65 +70,32 @@ class _AuthPageState extends State<AuthPage> {
         ),
         body: Container(
             decoration: BoxDecoration(
-                image: DecorationImage(
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.25), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/szeth.jpg'))),
+                image: _buildBackgroungImage()
+            ),
             padding: EdgeInsets.all(8.0),
             child: Center(
                 child: SingleChildScrollView(
-                    child: Column(
+                    child: Container(
+                      width: width,
+                      child: Column(
               // make sure to use listview so content is scrollable
               children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                      labelText: 'Email',
-                      contentPadding: EdgeInsets
-                          .all(8.0) // Puts padding inside of the textField
-                      ),
-                  onChanged: (String change) {
-                    setState(() {
-                      _email = change;
-                    });
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    contentPadding: EdgeInsets.all(8.0),
-                  ),
-                  onChanged: (String change) {
-                    _password = change;
-                  },
-                  obscureText: _obscurePassword,
-                ),
-                IconButton(
+                _buildTextField('Email', (String change) => _email = change, keyboardType: TextInputType.emailAddress),
+                _buildTextField('Password', (String change) => _password = change, obscureText: _obscurePassword),
+                IconButton( // Visibility button
                   icon: Icon(_obscurePassword == true
                       ? Icons.visibility
                       : Icons.visibility_off),
                   onPressed: _toggleObscurePassword,
                 ),
-                SwitchListTile(
-                  value: _agreedToTerms,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _agreedToTerms = value;
-                    });
-                  },
-                  title: Text('Weird At Last?'),
-                ),
+                buildSwitch(),
                 Container(
                   margin: EdgeInsets.all(8.0),
-                  child: RaisedButton(
-                      color: Theme.of(context).accentColor,
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/admin');
-                      },
+                  child: RaisedButton( // Login button
+                      onPressed: _onSubmit,
                       child: Text('Login')),
                 )
               ],
-            )))));
+            ))))));
   }
 }

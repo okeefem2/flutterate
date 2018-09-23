@@ -22,6 +22,6 @@ class PriceTag extends StatelessWidget {
                     ),
                     padding:
                         EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  ),
+                  );
   }
 }

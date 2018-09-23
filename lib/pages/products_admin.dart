@@ -7,11 +7,10 @@ class ProductsAdminPage extends StatelessWidget {
   final Function addProduct;
   final Function removeProduct;
   ProductsAdminPage(this.products, this.addProduct, this.removeProduct);
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      child: Scaffold(
-          drawer: Drawer(
+
+//TODO this could be a reusable widget with the products page
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
               child: Column(children: <Widget>[
             AppBar(
               automaticallyImplyLeading:
@@ -25,7 +24,13 @@ class ProductsAdminPage extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/home');
               },
             )
-          ])),
+          ]));
+  }
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      child: Scaffold(
+          drawer: _buildDrawer(context),
           appBar: AppBar(
             title: Text('Manage Products'),
             bottom: TabBar(tabs: <Widget>[

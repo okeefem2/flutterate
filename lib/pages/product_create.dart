@@ -11,10 +11,13 @@ class ProductCreatePage extends StatefulWidget {
 }
 
 class _ProductCreatePageState extends State<ProductCreatePage> {
-  String _title = '';
-  String _description = '';
-  double _price = 0.0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Map<String, dynamic> _formData = {
+        'title': null,
+        'description': null,
+        'price': null,
+        'favorited': false
+      };
 
   Widget _buildTextField(
       String labelText, Function callBack, Function validator,
@@ -29,7 +32,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
       keyboardType: keyboardType,
       maxLines: maxLines,
       onSaved: (String value) {
-        setState(callBack(value));
+        callBack(value); // No need for set state here for form, esp since widget does not need to be rebuilt
       },
     );
   }
@@ -38,13 +41,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
     var validationSuccess = _formKey.currentState.validate();
     if (validationSuccess) {
       _formKey.currentState.save();
-      final Map<String, dynamic> product = {
-        'title': _title,
-        'description': _description,
-        'price': _price,
-        'favorited': false
-      };
-      widget.addProduct(product);
+      widget.addProduct(_formData);
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -86,21 +83,21 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               // ListView items always take the full available space on the screen
               padding: EdgeInsets.symmetric(horizontal: padding / 2),
               children: <Widget>[
-                _buildTextField('Title', (String change) => _title = change,
+                _buildTextField('Title', (String change) => _formData['title'] = change,
                     (String value) {
                       if (value.isEmpty) {
                         return 'Title is required';
                       }
                     }),
                 _buildTextField(
-                    'Description', (String change) => _description = change,
+                    'Description', (String change) => _formData['description'] = change,
                     (String value) {
                       if (value.isEmpty) {
                         return 'Description is required';
                       }
                     }, maxLines: 3),
                 _buildTextField(
-                    'Price', (String change) => _price = double.parse(change.replaceFirst(RegExp(r','), '.')),
+                    'Price', (String change) => _formData['price'] = double.parse(change.replaceFirst(RegExp(r','), '.')),
                     (String value) {
                       if (value.isEmpty) {
                         return 'Price is required';

@@ -8,10 +8,10 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String _email = '';
-  String _password = '';
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Map<String, dynamic> _formData = {'email': null, 'password': null, 'agreedToTerms': false};
+
   bool _obscurePassword = true;
-  bool _agreedToTerms = false;
   void _toggleObscurePassword() {
     setState(() {
       _obscurePassword = !_obscurePassword;
@@ -20,42 +20,50 @@ class _AuthPageState extends State<AuthPage> {
 
   DecorationImage _buildBackgroungImage() {
     return DecorationImage(
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.25), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                    image: AssetImage('assets/szeth.jpg'));
+        colorFilter:
+            ColorFilter.mode(Colors.black.withOpacity(0.25), BlendMode.dstATop),
+        fit: BoxFit.cover,
+        image: AssetImage('assets/szeth.jpg'));
   }
 
   // TODO break out the text field builder from the product page to reduce code
-  Widget _buildTextField(String labelText, Function pressedCallback, {TextInputType keyboardType = TextInputType.text, bool obscureText = false}) {
-    return TextField(
-                  decoration: InputDecoration(
-                      labelText: labelText,
-                      contentPadding: EdgeInsets
-                          .all(8.0) // Puts padding inside of the textField
-                      ),
-                  onChanged: (String change) {
-                    setState(pressedCallback(change));
-                  },
-                  keyboardType: keyboardType,
-                  obscureText: obscureText,
-                );
+  Widget _buildTextField(
+      String labelText, Function pressedCallback, Function validator,
+      {TextInputType keyboardType = TextInputType.text,
+      bool obscureText = false}) {
+    return TextFormField(
+      validator: validator,
+      decoration: InputDecoration(
+          labelText: labelText,
+          contentPadding:
+              EdgeInsets.all(8.0) // Puts padding inside of the textField
+          ),
+      onSaved: (String change) {
+        pressedCallback(change);
+      },
+      keyboardType: keyboardType,
+      obscureText: obscureText,
+    );
   }
 
   Widget buildSwitch() {
     return SwitchListTile(
-                  value: _agreedToTerms,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _agreedToTerms = value;
-                    });
-                  },
-                  title: Text('Weird At Last?'),
-                );
+      value: _formData['agreedToTerms'],
+      onChanged: (bool value) {
+        setState(() {
+          _formData['agreedToTerms'] = value;
+        });
+      },
+      title: Text('Weird At Last?'),
+    );
   }
 
   void _onSubmit() {
-    Navigator.pushReplacementNamed(context, '/admin');
+    var validationSuccess = _formKey.currentState.validate();
+    if (validationSuccess && _formData['agreedToTerms']) {
+      _formKey.currentState.save();
+      Navigator.pushReplacementNamed(context, '/admin');
+    }
   }
 
   @override
@@ -68,34 +76,63 @@ class _AuthPageState extends State<AuthPage> {
               false, // do not infer what the first action would be
           title: Text('Login'),
         ),
-        body: Container(
-            decoration: BoxDecoration(
-                image: _buildBackgroungImage()
-            ),
-            padding: EdgeInsets.all(8.0),
-            child: Center(
-                child: SingleChildScrollView(
-                    child: Container(
-                      width: width,
-                      child: Column(
-              // make sure to use listview so content is scrollable
-              children: <Widget>[
-                _buildTextField('Email', (String change) => _email = change, keyboardType: TextInputType.emailAddress),
-                _buildTextField('Password', (String change) => _password = change, obscureText: _obscurePassword),
-                IconButton( // Visibility button
-                  icon: Icon(_obscurePassword == true
-                      ? Icons.visibility
-                      : Icons.visibility_off),
-                  onPressed: _toggleObscurePassword,
-                ),
-                buildSwitch(),
-                Container(
-                  margin: EdgeInsets.all(8.0),
-                  child: RaisedButton( // Login button
-                      onPressed: _onSubmit,
-                      child: Text('Login')),
-                )
-              ],
-            ))))));
+        body: GestureDetector(
+            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+            child: Container(
+                decoration: BoxDecoration(image: _buildBackgroungImage()),
+                padding: EdgeInsets.all(8.0),
+                child: Form(
+                    key: _formKey,
+                    child: Center(
+                        child: SingleChildScrollView(
+                            child: Container(
+                                width: width,
+                                child: Column(
+                                  // make sure to use listview so content is scrollable
+                                  children: <Widget>[
+                                    _buildTextField(
+                                        'Email',
+                                        (String change) => _formData['email'] =
+                                            change, (String value) {
+                                      if (value.isEmpty) {
+                                        return 'Email is required';
+                                      }
+                                      if (!RegExp(
+                                              r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                                          .hasMatch(value)) {
+                                        return 'Email is invalid';
+                                      }
+                                    },
+                                        keyboardType:
+                                            TextInputType.emailAddress),
+                                    _buildTextField(
+                                        'Password',
+                                        (String change) =>
+                                            _formData['password'] = change,
+                                        (String value) {
+                                      if (value.isEmpty) {
+                                        return 'Password is required';
+                                      }
+                                      if (value.length < 8) {
+                                        return 'Password must be at least 8 characters';
+                                      }
+                                    }, obscureText: _obscurePassword),
+                                    IconButton(
+                                      // Visibility button
+                                      icon: Icon(_obscurePassword == true
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
+                                      onPressed: _toggleObscurePassword,
+                                    ),
+                                    buildSwitch(),
+                                    Container(
+                                      margin: EdgeInsets.all(8.0),
+                                      child: RaisedButton(
+                                          // Login button
+                                          onPressed: _onSubmit,
+                                          child: Text('Login')),
+                                    )
+                                  ],
+                                ))))))));
   }
 }

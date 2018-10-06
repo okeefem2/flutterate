@@ -3,11 +3,14 @@ import 'dart:async';
 import '../widgets/products/price_tag.dart';
 import '../widgets/shared/title_default.dart';
 import '../widgets/shared/address_tag.dart';
+import '../models/product.dart';
+import 'package:scoped_model/scoped_model.dart';
+import '../scoped-models/products.dart';
 // TODO start naming pages with page in it, I am confused bewtween pages and widgets sometimes
-class Product extends StatelessWidget {
-  final Map<String, dynamic> _product;
+class ProductPage extends StatelessWidget {
+  final int _productIndex;
 
-  Product(this._product);
+  ProductPage(this._productIndex);
 
   _showWarningDialog(BuildContext context) {
     return showDialog(
@@ -35,27 +38,27 @@ class Product extends StatelessWidget {
         });
   }
 
-  Widget _buildTitlePriceRow() {
+  Widget _buildTitlePriceRow(String title, String price) {
     return Row(
                 mainAxisAlignment: MainAxisAlignment
                     .center, // Main axis of a row is horizontal
                 children: <Widget>[
-                  TitleDefault(_product['title']),
+                  TitleDefault(title),
                   SizedBox(
                     width: 10.0,
                   ),
-                  PriceTag(_product['price'].toString())
+                  PriceTag(price)
                 ],
               );
   }
 
-  Widget _buildDescriptionRow() {
+  Widget _buildDescriptionRow(String description) {
     return Row(
                 mainAxisAlignment: MainAxisAlignment
                     .center, // Main axis of a row is horizontal
                 children: <Widget>[
                   Text(
-                    _product['description'],
+                    description,
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -66,14 +69,14 @@ class Product extends StatelessWidget {
               );
   }
 
-  Widget _buildButtonRow(BuildContext context) {
+  Widget _buildButtonRow(BuildContext context, bool favorited) {
     return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
                           color: Colors.purple,
                           iconSize: 35.0,
-                          icon: Icon(_product['favorited'] == true
+                          icon: Icon(favorited == true
                               ? Icons.favorite
                               : Icons.favorite_border),
                           // child: Text('Details'),
@@ -101,27 +104,34 @@ class Product extends StatelessWidget {
           // returning false in this case because we are manually calling pop, otherwise the app will try to pop again when
           // This method resolves as true
         },
-        child: Scaffold(
-          appBar: AppBar(title: Text(_product['title'])),
+        child: ScopedModelDescendant<ProductsModel>(
+      // Builder is called whenever the model changes
+      builder: (BuildContext context, Widget child, ProductsModel model) {
+        final Product product = model.products[_productIndex];
+
+        return Scaffold(
+          appBar: AppBar(title: Text(product.title)),
           body: Center(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(_product['imageUrl']),
+              Image.asset(product.imageUrl),
               Container(
                 margin: EdgeInsets.only(top: 10.0),
-                  child: _buildTitlePriceRow()
+                  child: _buildTitlePriceRow(product.title, product.price.toString())
               ),
               Container(
                   margin: EdgeInsets.symmetric(vertical: 10.0),
-                  child: _buildDescriptionRow()),
+                  child: _buildDescriptionRow(product.description)),
               AddressTag('Nightvale, USA'),
               Container(
-                child: _buildButtonRow(context),
+                child: _buildButtonRow(context, product.favorited),
                 padding: EdgeInsets.all(10.0),
               ),
             ],
           )),
-        ));
+        );
+      }
+    ));
   }
 }

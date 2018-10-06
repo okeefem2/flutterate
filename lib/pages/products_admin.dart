@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import './product_list.dart';
-import './product_create.dart';
+import './product_edit.dart';
+import '../models/product.dart';
 
 class ProductsAdminPage extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
-  final Function addProduct;
-  final Function removeProduct;
-  ProductsAdminPage(this.products, this.addProduct, this.removeProduct);
 
 //TODO this could be a reusable widget with the products page
   Widget _buildDrawer(BuildContext context) {
@@ -47,7 +44,10 @@ class ProductsAdminPage extends StatelessWidget {
           // floatingActionButton:
           //     FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
           body: TabBarView(
-            children: <Widget>[ProductListPage(), ProductCreatePage(addProduct)],
+            children: <Widget>[
+              ProductListPage(),
+              ProductEditPage()
+            ],
           )),
       length: 2,
     );

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/products/products.dart';
+import '../models/product.dart';
+import '../scoped-models/products.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class Home extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
-  final Function replaceProduct;
-
-  Home(this.products, this.replaceProduct);
-
+class ProductsPage extends StatelessWidget {
 //TODO this could be a reusable widget with the products page
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
@@ -33,12 +31,21 @@ class Home extends StatelessWidget {
         appBar: AppBar(
           title: Text('Bloodstone Rituals'),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.favorite),
-              onPressed: () => {},
-            )
+            ScopedModelDescendant<ProductsModel>(
+                // Builder is called whenever the model changes
+                builder:
+                    (BuildContext context, Widget child, ProductsModel model) {
+              return IconButton(
+                icon: Icon(
+                  model.showFavorites ? Icons.favorite : Icons.favorite_border
+                ),
+                onPressed: () {
+                  model.toggleDisplayMode();
+                },
+              );
+            })
           ],
         ),
-        body: Products(replaceProduct, products));
+        body: Products());
   }
 }

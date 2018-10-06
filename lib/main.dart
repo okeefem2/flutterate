@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import './product_manager.dart';
+// import 'package:flutter/rendering.dart';
 import './pages/products.dart';
 import './pages/auth.dart';
 import './pages/products_admin.dart';
 import './pages/product.dart';
+import './models/product.dart';
+import 'package:scoped_model/scoped_model.dart';
+import './scoped-models/products.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -24,76 +26,48 @@ class Flutterate extends StatefulWidget {
 // String a = const 'hello world'
 
 class _FlutterateState extends State<Flutterate> {
-  final List<Map<String, dynamic>> _products = [];
-
-  void _addProduct(Map<String, dynamic> product) {
-    print('adding a product');
-    print(product);
-    setState(() {
-      product['imageUrl'] = 'assets/your_own_empty_heart.jpg';
-      _products.add(product);
-    });
-    print(_products);
-  }
-
-  void _removeProduct(int index) {
-    print('removing');
-    print(index);
-    setState(() {
-      _products.removeAt(index);
-    });
-  }
-
-  void _replaceProduct(int index, Map<String, dynamic> product) {
-    print('replacing');
-    print(index);
-    setState(() {
-      _products[index] = product;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // debugShowMaterialGrid: true,
-      theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: Colors.green,
-          accentColor: Colors.greenAccent,
-          buttonColor: Colors.greenAccent
-          // fontFamily: 'Oswald' TO change the whole app theme
-      ),
-      home: AuthPage(),
-      routes: {
-        '/home': (BuildContext context) =>
-            Home(_products, _replaceProduct), // Can't make it just '/' since we have a home page defined
-        '/admin': (BuildContext context) => ProductsAdminPage(_products, _addProduct, _removeProduct),
-      },
-      onGenerateRoute: (RouteSettings settings) {
-        final List<String> pathElements = settings.name.split('/');
-        if (pathElements[0] != '') {
-          return null;
-        }
-        var route;
-        switch (pathElements[1]) {
-          case 'product':
-            final int index = int.parse(pathElements[2]);
-            route = MaterialPageRoute<bool>(
-                builder: (BuildContext context) => Product(_products[index]));
-            break;
-          default:
-            route = null;
-            break;
-        }
-        return route;
-      }, // Executes when routing to a named route that is not registered in routes
-      onUnknownRoute: (RouteSettings settings) {
-        return MaterialPageRoute(
-          builder: (BuildContext context) =>
-            Home(_products, _replaceProduct)
-        );
-      }, // Executes when a route is not matched, for example when re return a null from onGenerateRoute
-    ); // No new keyword needed in dart
+    return ScopedModel<ProductsModel>(
+        model: new ProductsModel(),
+        child: MaterialApp(
+          // debugShowMaterialGrid: true,
+          theme: ThemeData(
+              brightness: Brightness.light,
+              primarySwatch: Colors.green,
+              accentColor: Colors.greenAccent,
+              buttonColor: Colors.greenAccent
+              // fontFamily: 'Oswald' TO change the whole app theme
+              ),
+          home: AuthPage(),
+          routes: {
+            '/home': (BuildContext context) =>
+                ProductsPage(), // Can't make it just '/' since we have a home page defined
+            '/admin': (BuildContext context) => ProductsAdminPage(),
+          },
+          onGenerateRoute: (RouteSettings settings) {
+            final List<String> pathElements = settings.name.split('/');
+            if (pathElements[0] != '') {
+              return null;
+            }
+            var route;
+            switch (pathElements[1]) {
+              case 'product':
+                final int index = int.parse(pathElements[2]);
+                route = MaterialPageRoute<bool>(
+                    builder: (BuildContext context) => ProductPage(index));
+                break;
+              default:
+                route = null;
+                break;
+            }
+            return route;
+          }, // Executes when routing to a named route that is not registered in routes
+          onUnknownRoute: (RouteSettings settings) {
+            return MaterialPageRoute(
+                builder: (BuildContext context) => ProductsPage());
+          }, // Executes when a route is not matched, for example when re return a null from onGenerateRoute
+        )); // No new keyword needed in dart
   }
 }
 

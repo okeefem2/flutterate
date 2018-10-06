@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import './product_card.dart';
-
+import '../../models/product.dart';
+import '../../scoped-models/products.dart';
+import 'package:scoped_model/scoped_model.dart';
 class Products extends StatelessWidget {
-  final List<Map<String, dynamic>>
-      _products; // final to be immutable since stateless
-  final Function _replaceProduct;
-  Products(this._replaceProduct, [this._products = const []]) {
-    // Optional positional args wrapped in brackets and default values must be const
-    // This is executed first in lifecycle
-    // Is also called when the input changes
-  }
+  // Removed after using scoped model
+  // final List<Product>
+  //     _products; // final to be immutable since stateless
+  // final Function _replaceProduct;
+  // Products(this._replaceProduct, [this._products = const []]) {
+  //   // Optional positional args wrapped in brackets and default values must be const
+  //   // This is executed first in lifecycle
+  //   // Is also called when the input changes
+  // }
 
-  Widget _buildProductList() {
-    return _products.length > 0
+  Widget _buildProductList(List<Product> products) {
+    return products.length > 0
         ? ListView.builder(
             itemBuilder: (BuildContext context, int index) => 
-              ProductCard(_products[index], index, _replaceProduct),
-            itemCount: _products.length,
+              ProductCard(products[index], index),
+            itemCount: products.length,
           )
         : Center(
             child: Text('No Propaganda Here! Contact The City Council...'));
@@ -44,7 +47,12 @@ class Products extends StatelessWidget {
     //     )
     //   ).toList(),
     // );
-    return _buildProductList();
+    return ScopedModelDescendant<ProductsModel>(
+      // Builder is called whenever the model changes
+      builder: (BuildContext context, Widget child, ProductsModel model) {
+        return _buildProductList(model.displayedProducts);
+      },
+    );
   }
 }
 

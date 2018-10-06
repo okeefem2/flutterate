@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductEditPage extends StatefulWidget {
@@ -43,23 +43,29 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _onSubmit(Function addProduct, Function updateProduct,
+  void _onSubmit(Function addProduct, Function updateProduct, Function setSelectedProduct
       [int selectedProductIndex]) {
     var validationSuccess = _formKey.currentState.validate();
     if (validationSuccess) {
       _formKey.currentState.save();
-      final newProduct = new Product(
-          description: _formData['description'],
+      // final newProduct = new Product(
+      //     description: _formData['description'],
+      //     title: _formData['title'],
+      //     price: _formData['price'],
+      //     imageUrl: _formData['imageUrl'],
+      //     favorited: _formData['favorited']);
+      if (selectedProductIndex != null) {
+        updateProduct(description: _formData['description'],
           title: _formData['title'],
           price: _formData['price'],
-          imageUrl: _formData['imageUrl'],
-          favorited: _formData['favorited']);
-      if (selectedProductIndex != null) {
-        updateProduct(newProduct);
+          imageUrl: _formData['imageUrl']);
       } else {
-        addProduct(newProduct);
+        addProduct(description: _formData['description'],
+          title: _formData['title'],
+          price: _formData['price'],
+          imageUrl: _formData['imageUrl']);
       }
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home').then((_) => setSelectedProduct(null));
     }
   }
 
@@ -131,10 +137,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildSubmitButton() {
-    return ScopedModelDescendant<ProductsModel>(
-        builder: (BuildContext context, Widget child, ProductsModel model) {
+    return ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget child, MainModel model) {
       return RaisedButton(
-          onPressed: () => _onSubmit(model.addProduct, model.updateProduct,
+          onPressed: () => _onSubmit(model.addProduct, model.updateProduct, model.selectProduct,
               model.selectedProductIndex),
           child: Text('Save'));
     });
@@ -154,8 +160,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     //       },
     //     ));
 
-    return ScopedModelDescendant<ProductsModel>(
-        builder: (BuildContext context, Widget child, ProductsModel model) {
+    return ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget child, MainModel model) {
       final Widget pageContent =
           _buildPageContent(context, model.selectedProduct);
       return model.selectedProductIndex == null

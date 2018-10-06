@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../scoped-models/main.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -9,7 +11,11 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _formData = {'email': null, 'password': null, 'agreedToTerms': false};
+  final Map<String, dynamic> _formData = {
+    'email': null,
+    'password': null,
+    'agreedToTerms': false
+  };
 
   bool _obscurePassword = true;
   void _toggleObscurePassword() {
@@ -58,10 +64,11 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _onSubmit() {
+  void _onSubmit(MainModel model) {
     var validationSuccess = _formKey.currentState.validate();
     if (validationSuccess && _formData['agreedToTerms']) {
       _formKey.currentState.save();
+      model.login(_formData['email'], _formData['password']);
       Navigator.pushReplacementNamed(context, '/admin');
     }
   }
@@ -126,12 +133,15 @@ class _AuthPageState extends State<AuthPage> {
                                     ),
                                     buildSwitch(),
                                     Container(
-                                      margin: EdgeInsets.all(8.0),
-                                      child: RaisedButton(
-                                          // Login button
-                                          onPressed: _onSubmit,
-                                          child: Text('Login')),
-                                    )
+                                        margin: EdgeInsets.all(8.0),
+                                        child: ScopedModelDescendant<MainModel>(
+                                            builder: (BuildContext context,
+                                                Widget child, MainModel model) {
+                                          return RaisedButton(
+                                              // Login button
+                                              onPressed: () => _onSubmit(model),
+                                              child: Text('Login'));
+                                        }))
                                   ],
                                 ))))))));
   }

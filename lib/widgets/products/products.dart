@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './product_card.dart';
 import '../../models/product.dart';
-import '../../scoped-models/products.dart';
+import '../../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 class Products extends StatelessWidget {
   // Removed after using scoped model
@@ -47,9 +47,9 @@ class Products extends StatelessWidget {
     //     )
     //   ).toList(),
     // );
-    return ScopedModelDescendant<ProductsModel>(
+    return ScopedModelDescendant<MainModel>(
       // Builder is called whenever the model changes
-      builder: (BuildContext context, Widget child, ProductsModel model) {
+      builder: (BuildContext context, Widget child, MainModel model) {
         return _buildProductList(model.displayedProducts);
       },
     );

@@ -4,9 +4,8 @@ import './pages/products.dart';
 import './pages/auth.dart';
 import './pages/products_admin.dart';
 import './pages/product.dart';
-import './models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
-import './scoped-models/products.dart';
+import './scoped-models/main.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -28,8 +27,8 @@ class Flutterate extends StatefulWidget {
 class _FlutterateState extends State<Flutterate> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<ProductsModel>(
-        model: new ProductsModel(),
+    return ScopedModel<MainModel>(
+        model: new MainModel(),
         child: MaterialApp(
           // debugShowMaterialGrid: true,
           theme: ThemeData(

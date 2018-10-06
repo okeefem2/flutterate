@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/products/products.dart';
-import '../models/product.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductsPage extends StatelessWidget {
@@ -31,10 +30,10 @@ class ProductsPage extends StatelessWidget {
         appBar: AppBar(
           title: Text('Bloodstone Rituals'),
           actions: <Widget>[
-            ScopedModelDescendant<ProductsModel>(
+            ScopedModelDescendant<MainModel>(
                 // Builder is called whenever the model changes
                 builder:
-                    (BuildContext context, Widget child, ProductsModel model) {
+                    (BuildContext context, Widget child, MainModel model) {
               return IconButton(
                 icon: Icon(
                   model.showFavorites ? Icons.favorite : Icons.favorite_border

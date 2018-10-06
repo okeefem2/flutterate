@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import './product_edit.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductListPage extends StatelessWidget {
   Widget _buildEditButton(
-      BuildContext context, int index, ProductsModel model) {
+      BuildContext context, int index, MainModel model) {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
@@ -14,15 +14,15 @@ class ProductListPage extends StatelessWidget {
             .of(context)
             .push(MaterialPageRoute(builder: (BuildContext context) {
           return ProductEditPage();
-        }));
+        })).then((_) => model.selectProduct(null));
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<ProductsModel>(
-        builder: (BuildContext context, Widget child, ProductsModel model) {
+    return ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget child, MainModel model) {
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
           return Dismissible(
@@ -31,6 +31,7 @@ class ProductListPage extends StatelessWidget {
                 if (direction == DismissDirection.endToStart) {
                   model.selectProduct(index);
                   model.removeProduct();
+                  model.selectProduct(null);
                 } else if (direction == DismissDirection.startToEnd) {
                 } else {}
               },

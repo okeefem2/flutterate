@@ -5,7 +5,7 @@ import '../widgets/shared/title_default.dart';
 import '../widgets/shared/address_tag.dart';
 import '../models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
-import '../scoped-models/products.dart';
+import '../scoped-models/main.dart';
 // TODO start naming pages with page in it, I am confused bewtween pages and widgets sometimes
 class ProductPage extends StatelessWidget {
   final int _productIndex;
@@ -33,7 +33,7 @@ class ProductPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                ),
+              ),
               ]);
         });
   }
@@ -104,9 +104,9 @@ class ProductPage extends StatelessWidget {
           // returning false in this case because we are manually calling pop, otherwise the app will try to pop again when
           // This method resolves as true
         },
-        child: ScopedModelDescendant<ProductsModel>(
+        child: ScopedModelDescendant<MainModel>(
       // Builder is called whenever the model changes
-      builder: (BuildContext context, Widget child, ProductsModel model) {
+      builder: (BuildContext context, Widget child, MainModel model) {
         final Product product = model.products[_productIndex];
 
         return Scaffold(

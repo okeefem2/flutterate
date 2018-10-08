@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import './product_list.dart';
 import './product_edit.dart';
-
+import '../scoped-models/main.dart';
 class ProductsAdminPage extends StatelessWidget {
+  final MainModel _model;
+
+  ProductsAdminPage(this._model);
 
 //TODO this could be a reusable widget with the products page
   Widget _buildDrawer(BuildContext context) {
@@ -44,7 +47,7 @@ class ProductsAdminPage extends StatelessWidget {
           //     FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
           body: TabBarView(
             children: <Widget>[
-              ProductListPage(),
+              ProductListPage(_model),
               ProductEditPage()
             ],
           )),

@@ -27,8 +27,9 @@ class Flutterate extends StatefulWidget {
 class _FlutterateState extends State<Flutterate> {
   @override
   Widget build(BuildContext context) {
+    final MainModel model = MainModel();
     return ScopedModel<MainModel>(
-        model: new MainModel(),
+        model: model,
         child: MaterialApp(
           // debugShowMaterialGrid: true,
           theme: ThemeData(
@@ -41,8 +42,8 @@ class _FlutterateState extends State<Flutterate> {
           home: AuthPage(),
           routes: {
             '/home': (BuildContext context) =>
-                ProductsPage(), // Can't make it just '/' since we have a home page defined
-            '/admin': (BuildContext context) => ProductsAdminPage(),
+                ProductsPage(model), // Can't make it just '/' since we have a home page defined
+            '/admin': (BuildContext context) => ProductsAdminPage(model),
           },
           onGenerateRoute: (RouteSettings settings) {
             final List<String> pathElements = settings.name.split('/');
@@ -64,7 +65,7 @@ class _FlutterateState extends State<Flutterate> {
           }, // Executes when routing to a named route that is not registered in routes
           onUnknownRoute: (RouteSettings settings) {
             return MaterialPageRoute(
-                builder: (BuildContext context) => ProductsPage());
+                builder: (BuildContext context) => ProductsPage(model));
           }, // Executes when a route is not matched, for example when re return a null from onGenerateRoute
         )); // No new keyword needed in dart
   }

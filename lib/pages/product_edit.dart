@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'dart:async';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -43,7 +44,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _onSubmit(Function addProduct, Function updateProduct, Function setSelectedProduct
+  void _onSubmit(
+      Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
     var validationSuccess = _formKey.currentState.validate();
     if (validationSuccess) {
@@ -53,19 +55,25 @@ class _ProductEditPageState extends State<ProductEditPage> {
       //     title: _formData['title'],
       //     price: _formData['price'],
       //     imageUrl: _formData['imageUrl'],
-      //     favorited: _formData['favorited']);
+      //     favorited: _formData['favorited']);\
+      Future requestFinished;
       if (selectedProductIndex != null) {
-        updateProduct(description: _formData['description'],
-          title: _formData['title'],
-          price: _formData['price'],
-          imageUrl: _formData['imageUrl']);
+        requestFinished = updateProduct(
+            description: _formData['description'],
+            title: _formData['title'],
+            price: _formData['price'],
+            imageUrl: _formData['imageUrl']);
       } else {
-        addProduct(description: _formData['description'],
-          title: _formData['title'],
-          price: _formData['price'],
-          imageUrl: _formData['imageUrl']);
+        requestFinished = addProduct(
+            description: _formData['description'],
+            title: _formData['title'],
+            price: _formData['price'],
+            imageUrl: _formData['imageUrl']);
       }
-      Navigator.pushReplacementNamed(context, '/home').then((_) => setSelectedProduct(null));
+      requestFinished.then((_) => Navigator
+          .pushReplacementNamed(context, '/home')
+          .then((_) => setSelectedProduct(null)));
+      
     }
   }
 
@@ -139,9 +147,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
   Widget _buildSubmitButton() {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget child, MainModel model) {
+      if (model.isLoading) {
+        return Center(child: CircularProgressIndicator());
+      }
       return RaisedButton(
-          onPressed: () => _onSubmit(model.addProduct, model.updateProduct, model.selectProduct,
-              model.selectedProductIndex),
+          onPressed: () => _onSubmit(model.addProduct, model.updateProduct,
+              model.selectProduct, model.selectedProductIndex),
           child: Text('Save'));
     });
   }

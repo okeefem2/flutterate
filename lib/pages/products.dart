@@ -3,7 +3,24 @@ import '../widgets/products/products.dart';
 import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class ProductsPage extends StatelessWidget {
+class ProductsPage extends StatefulWidget {
+  // Converted to stateful so we get the initstate hook for fetching products
+  final MainModel model;
+  ProductsPage(this.model);
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _ProductsPageState();
+  }
+}
+
+class _ProductsPageState extends State<ProductsPage> {
+  @override
+  initState() {
+    widget.model.fetchProducts();
+    super.initState();
+  }
+
 //TODO this could be a reusable widget with the products page
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
@@ -23,6 +40,17 @@ class ProductsPage extends StatelessWidget {
     ]));
   }
 
+  Widget _buildProductList() {
+    return ScopedModelDescendant<MainModel>(
+        // Builder is called whenever the model changes
+        builder: (BuildContext context, Widget child, MainModel model) {
+      if (model.isLoading) {
+        return Center(child: CircularProgressIndicator());
+      }
+      return RefreshIndicator(child: Products(), onRefresh: () => model.fetchProducts(false));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,12 +60,11 @@ class ProductsPage extends StatelessWidget {
           actions: <Widget>[
             ScopedModelDescendant<MainModel>(
                 // Builder is called whenever the model changes
-                builder:
-                    (BuildContext context, Widget child, MainModel model) {
+                builder: (BuildContext context, Widget child, MainModel model) {
               return IconButton(
-                icon: Icon(
-                  model.showFavorites ? Icons.favorite : Icons.favorite_border
-                ),
+                icon: Icon(model.showFavorites
+                    ? Icons.favorite
+                    : Icons.favorite_border),
                 onPressed: () {
                   model.toggleDisplayMode();
                 },
@@ -45,6 +72,6 @@ class ProductsPage extends StatelessWidget {
             })
           ],
         ),
-        body: Products());
+        body: _buildProductList());
   }
 }

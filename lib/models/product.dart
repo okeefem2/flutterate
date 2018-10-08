@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+
 class Product {
+  final String id;
   final String title;
   final String description;
   final double price;
@@ -9,6 +12,7 @@ class Product {
   final String userEmail;
 
   Product({
+    this.id = '',
     @required this.title, 
     @required this.description, 
     @required this.price, 
@@ -18,7 +22,23 @@ class Product {
     @required this.userEmail
   });
 
-  set imageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
+  Product.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        title = json['title'],
+        description = json['description'],
+        price = double.parse(json['price']),
+        imageUrl = json['imageUrl'],
+        favorited = json['favorited'] == 'true',
+        userId = json['userId'],
+        userEmail = json['userEmail'];
+
+  Map<String, dynamic> toJson() => {
+      'title': title,
+      'description': description,
+      'imageUrl': imageUrl,
+      'favorited': favorited.toString(),
+      'userId': userId,
+      'userEmail': userEmail,
+      'price': price.toString()
+    };
 }

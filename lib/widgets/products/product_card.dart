@@ -28,42 +28,37 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context) {
-    return ButtonBar(
-      alignment: MainAxisAlignment.center,
-      children: <Widget>[
+    return ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget child, MainModel model) {
+      return ButtonBar(alignment: MainAxisAlignment.center, children: <Widget>[
         IconButton(
           color: Theme.of(context).accentColor,
           iconSize: 35.0,
           icon: Icon(Icons.info),
           // child: Text('Details'),
-          onPressed: () => Navigator
-                  .pushNamed<bool>(
+          onPressed: () => Navigator.pushNamed<bool>(
                       // Tell the type of the future
                       context,
-                      '/product/' + _productIndex.toString())
+                      '/product/' + model.products[_productIndex].id)
                   .then((value) {
                 if (value) {
                   // removeProduct(index);
                 }
               }),
         ),
-        ScopedModelDescendant<MainModel>(
-            builder: (BuildContext context, Widget child, MainModel model) {
-          return IconButton(
-              color: Colors.purple,
-              iconSize: 35.0,
-              icon: Icon(model.products[_productIndex].favorited == true
-                  ? Icons.favorite
-                  : Icons.favorite_border),
-              // child: Text('Details'),
-              onPressed: () {
-                model.selectProduct(_productIndex);
-                model.toggleProductFavorite();
-                model.selectProduct(null);
-              });
-        }),
-      ],
-    );
+        IconButton(
+            color: Colors.purple,
+            iconSize: 35.0,
+            icon: Icon(model.products[_productIndex].favorited == true
+                ? Icons.favorite
+                : Icons.favorite_border),
+            // child: Text('Details'),
+            onPressed: () {
+              model.selectProduct(model.products[_productIndex].id);
+              model.toggleProductFavorite();
+            })
+      ]);
+    });
   }
 
   @override
@@ -71,7 +66,12 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset(_product.imageUrl),
+          FadeInImage(
+            image: AssetImage(_product.imageUrl),
+            height: 300.0,
+            fit: BoxFit.cover, // Auto zoom the image
+            placeholder: AssetImage(_product.imageUrl),
+          ),
           Container(
               margin: EdgeInsets.symmetric(vertical: 10.0),
               // padding: EdgeInsets.only(top: 10.0),

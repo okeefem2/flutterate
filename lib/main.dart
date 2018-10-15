@@ -25,11 +25,27 @@ class Flutterate extends StatefulWidget {
 // String a = const 'hello world'
 
 class _FlutterateState extends State<Flutterate> {
+  final MainModel _model = MainModel();
+  bool _isAuthenticated = false;
+  @override
+  void initState() {
+    _model.checkToken();
+    _model.authSubject.listen((bool isAuthenticated) {
+      setState(() {
+        print('authentication changed $isAuthenticated');
+        if (!isAuthenticated) {
+          // Navigator.of(context).pushReplacementNamed('/auth');
+        }
+        _isAuthenticated = isAuthenticated;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final MainModel model = MainModel();
     return ScopedModel<MainModel>(
-        model: model,
+        model: _model,
         child: MaterialApp(
           // debugShowMaterialGrid: true,
           theme: ThemeData(
@@ -39,23 +55,31 @@ class _FlutterateState extends State<Flutterate> {
               buttonColor: Colors.greenAccent
               // fontFamily: 'Oswald' TO change the whole app theme
               ),
-          home: AuthPage(),
+          // home: _isAuthenticated ? ProductsPage(_model) : AuthPage(),
           routes: {
-            '/home': (BuildContext context) =>
-                ProductsPage(model), // Can't make it just '/' since we have a home page defined
-            '/admin': (BuildContext context) => ProductsAdminPage(model),
+            '/': (BuildContext context) =>
+                _isAuthenticated ? ProductsPage(_model) : AuthPage(),
+            '/products': (BuildContext context) => _isAuthenticated ? ProductsPage(_model) : AuthPage(), // Can't make it just '/' if we have a home page defined
+            '/admin': (BuildContext context) => _isAuthenticated ? ProductsAdminPage(_model) : AuthPage(),
+            '/auth': (BuildContext context) => _isAuthenticated ? AuthPage() : AuthPage(),
           },
           onGenerateRoute: (RouteSettings settings) {
+            _model.selectProduct(null);
             final List<String> pathElements = settings.name.split('/');
             if (pathElements[0] != '') {
               return null;
             }
+            if (!_isAuthenticated) {
+              return MaterialPageRoute<bool>(
+                    builder: (BuildContext context) => AuthPage());
+            }
             var route;
             switch (pathElements[1]) {
               case 'product':
-                final int index = int.parse(pathElements[2]);
+                final String productId = pathElements[2];
+                _model.selectProduct(productId);
                 route = MaterialPageRoute<bool>(
-                    builder: (BuildContext context) => ProductPage(index));
+                    builder: (BuildContext context) => _isAuthenticated ? ProductPage() : AuthPage());
                 break;
               default:
                 route = null;
@@ -65,7 +89,7 @@ class _FlutterateState extends State<Flutterate> {
           }, // Executes when routing to a named route that is not registered in routes
           onUnknownRoute: (RouteSettings settings) {
             return MaterialPageRoute(
-                builder: (BuildContext context) => ProductsPage(model));
+                builder: (BuildContext context) => ProductsPage(_model));
           }, // Executes when a route is not matched, for example when re return a null from onGenerateRoute
         )); // No new keyword needed in dart
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/products/products.dart';
 import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
-
+import '../widgets/shared/logout_list_tile.dart';
 class ProductsPage extends StatefulWidget {
   // Converted to stateful so we get the initstate hook for fetching products
   final MainModel model;
@@ -36,7 +36,9 @@ class _ProductsPageState extends State<ProductsPage> {
         onTap: () {
           Navigator.pushReplacementNamed(context, '/admin');
         },
-      )
+      ),
+      Divider(),
+      LogoutListTile()
     ]));
   }
 

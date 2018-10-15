@@ -39,7 +39,7 @@ class ProductManager extends StatelessWidget {
         //       Theme.of(context).accentColor),
         // ),
         Expanded(
-            child: Products(replaceProduct, products)), // Expanded takes remaining space after other widgets
+            child: Products()), // Expanded takes remaining space after other widgets
       ],
     );
   }

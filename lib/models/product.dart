@@ -22,13 +22,14 @@ class Product {
     @required this.userEmail
   });
 
-  Product.fromJson(Map<String, dynamic> json)
+  Product.fromJson(Map<String, dynamic> json, String userId)
       : id = json['id'],
         title = json['title'],
         description = json['description'],
         price = double.parse(json['price']),
         imageUrl = json['imageUrl'],
-        favorited = json['favorited'] == 'true',
+        favorited = json['favoritedUsers'] != null ?
+                    (json['favoritedUsers'] as Map<String, dynamic>).containsKey(userId) : false,
         userId = json['userId'],
         userEmail = json['userEmail'];
 
@@ -36,7 +37,6 @@ class Product {
       'title': title,
       'description': description,
       'imageUrl': imageUrl,
-      'favorited': favorited.toString(),
       'userId': userId,
       'userEmail': userEmail,
       'price': price.toString()

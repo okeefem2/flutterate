@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'dart:async';
 import '../enums/auth_mode.dart';
 
 class AuthPage extends StatefulWidget {

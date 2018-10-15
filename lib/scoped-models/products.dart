@@ -45,6 +45,8 @@ class ProductsModel extends ConnectedProductsModel {
           'https://flutterate-api.firebaseio.com/products/${selectedProduct.id}/favoritedUsers/${authenticatedUser.id}.json?auth=${authenticatedUser != null ? authenticatedUser.authToken : ''}',
           body: json.encode(true));
       if (response.statusCode != 200 && response.statusCode != 201) {
+        print('There was an error adding the user to the favorites list');
+
         // Error handling
         return;
       }
@@ -57,7 +59,8 @@ class ProductsModel extends ConnectedProductsModel {
         return;
       }
     }
-    products[selectedProductIndex] = newProduct;
+    replaceProduct(newProduct, selectedProductIndex);
+    
     notifyListeners();
     selectProduct(null);
   }

@@ -48,6 +48,10 @@ class ConnectedProductsModel extends Model {
     notifyListeners();
   }
 
+  void replaceProduct(Product product, int index) {
+    _products[index] = product;
+  }
+
   // User specific actions
 
   Future<Map<String, dynamic>> _authenticate(String email, String password,
@@ -198,7 +202,7 @@ class ConnectedProductsModel extends Model {
     toggleIsLoading();
     return http
         .delete(
-            'https://flutterate-api.firebaseio.com/products/${removedProductId}.json?auth=${_authenticatedUser != null ? _authenticatedUser.authToken : ''}')
+            'https://flutterate-api.firebaseio.com/products/$removedProductId.json?auth=${_authenticatedUser != null ? _authenticatedUser.authToken : ''}')
         .then((http.Response response) {
       toggleIsLoading();
       if (response.statusCode != 200 && response.statusCode != 201) {
@@ -238,7 +242,7 @@ class ConnectedProductsModel extends Model {
         toggleIsLoading();
         return false;
       }
-      _products[selectedProductIndex] = newProduct;
+      replaceProduct(newProduct, selectedProductIndex);
       toggleIsLoading();
       return true;
     }).catchError((error) {
@@ -248,6 +252,7 @@ class ConnectedProductsModel extends Model {
   }
 
   Future<bool> fetchProducts([bool showLoader = false]) {
+    print('fetching products');
     if (showLoader) {
       toggleIsLoading();
     }

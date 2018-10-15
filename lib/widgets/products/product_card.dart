@@ -32,6 +32,17 @@ class ProductCard extends StatelessWidget {
         builder: (BuildContext context, Widget child, MainModel model) {
       return ButtonBar(alignment: MainAxisAlignment.center, children: <Widget>[
         IconButton(
+            color: Colors.purple,
+            iconSize: 35.0,
+            icon: Icon(model.products[_productIndex].favorited == true
+                ? Icons.favorite
+                : Icons.favorite_border),
+            // child: Text('Details'),
+            onPressed: () {
+              model.selectProduct(model.products[_productIndex].id);
+              model.toggleProductFavorite();
+            }),
+        IconButton(
           color: Theme.of(context).accentColor,
           iconSize: 35.0,
           icon: Icon(Icons.info),
@@ -45,18 +56,7 @@ class ProductCard extends StatelessWidget {
                   // removeProduct(index);
                 }
               }),
-        ),
-        IconButton(
-            color: Colors.purple,
-            iconSize: 35.0,
-            icon: Icon(model.products[_productIndex].favorited == true
-                ? Icons.favorite
-                : Icons.favorite_border),
-            // child: Text('Details'),
-            onPressed: () {
-              model.selectProduct(model.products[_productIndex].id);
-              model.toggleProductFavorite();
-            })
+        )
       ]);
     });
   }

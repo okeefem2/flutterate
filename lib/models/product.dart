@@ -19,7 +19,7 @@ class Product {
     @required this.title, 
     @required this.description, 
     @required this.price, 
-    this.imageUrl = 'assets/your_own_empty_heart.jpg',
+    this.imageUrl = 'assets/flutter.png',
     this.favorited = false,
     @required this.userId,
     @required this.userEmail,

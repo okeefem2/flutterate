@@ -73,7 +73,7 @@ class _AuthPageState extends State<AuthPage> {
           _formData['agreedToTerms'] = value;
         });
       },
-      title: Text('Weird At Last?'),
+      title: Text('Accept Terms?'),
     );
   }
 

@@ -58,7 +58,7 @@ class _ProductsPageState extends State<ProductsPage> {
     return Scaffold(
         drawer: _buildDrawer(context),
         appBar: AppBar(
-          title: Text('Bloodstone Rituals'),
+          title: Text('Products'),
           actions: <Widget>[
             ScopedModelDescendant<MainModel>(
                 // Builder is called whenever the model changes

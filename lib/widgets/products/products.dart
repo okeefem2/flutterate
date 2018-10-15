@@ -22,7 +22,7 @@ class Products extends StatelessWidget {
             itemCount: products.length,
           )
         : Center(
-            child: Text('No Propaganda Here! Contact The City Council...'));
+            child: Text('No Products Found'));
   }
 
   @override

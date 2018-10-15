@@ -21,7 +21,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'description': null,
     'price': null,
     'favorited': false,
-    'imageUrl': 'assets/your_own_empty_heart.jpg',
+    'imageUrl': 'assets/flutter.png',
     'location': null
   };
 

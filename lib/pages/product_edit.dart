@@ -156,7 +156,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                         keyboardType: TextInputType.number,
                         initialValue:
                             product != null ? product.price.toString() : ''),
-                    LocationInput(_setLocation),
+                    LocationInput(_setLocation, product),
                     Container(
                       margin: EdgeInsets.all(8.0),
                       child: _buildSubmitButton(),

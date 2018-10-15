@@ -38,8 +38,8 @@ class Product {
                     (json['favoritedUsers'] as Map<String, dynamic>).containsKey(userId) : false,
         userId = json['userId'],
         userEmail = json['userEmail'],
-        locationLatitude = json['locationLatitude'],
-        locationLongitude = json['locationLongitude'],
+        locationLatitude = json['locationLatitude'] != null ? double.parse(json['locationLatitude']) : null,
+        locationLongitude = json['locationLongitude'] != null ? double.parse(json['locationLongitude']) : null,
         locationAddress = json['locationAddress'];
 
   Map<String, dynamic> toJson() => {

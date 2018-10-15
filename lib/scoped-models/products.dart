@@ -43,6 +43,9 @@ class ProductsModel extends ConnectedProductsModel {
         userId: selectedProduct.userId,
         userEmail: selectedProduct.userEmail,
         imageUrl: selectedProduct.imageUrl,
+        locationAddress: selectedProduct.locationAddress,
+        locationLatitude: selectedProduct.locationLatitude,
+        locationLongitude: selectedProduct.locationLongitude,
         favorited: favorite);
     if (favorite) {
       final http.Response response = await http.put(

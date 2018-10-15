@@ -77,7 +77,7 @@ class ProductCard extends StatelessWidget {
               // padding: EdgeInsets.only(top: 10.0),
               // margin: EdgeInsets.symmetric(vertical: 10.0),
               child: _buildTitlePriceRow()),
-          AddressTag('Nightvale, USA'),
+          AddressTag(_product.locationAddress != null ? _product.locationAddress : 'Not Set'),
           _buildActionButtons(context)
         ],
       ),

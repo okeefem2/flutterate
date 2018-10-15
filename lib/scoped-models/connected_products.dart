@@ -230,12 +230,13 @@ class ConnectedProductsModel extends Model {
       double price,
       String imageUrl,
       LocationData locationData}) {
+        print(locationData.address);
     final int selectedProductIndex = products
         .indexWhere((Product product) => product.id == _selectedProductId);
     final oldProduct = _products[selectedProductIndex];
     if (_authenticatedUser.id != oldProduct.userId) {
       print('You do not own this product silly');
-      return;
+      return Future.value(false);
     }
     toggleIsLoading();
     print('replacing');
@@ -256,6 +257,7 @@ class ConnectedProductsModel extends Model {
             body: json.encode(newProduct.toJson()))
         .then((http.Response response) {
       if (response.statusCode != 200 && response.statusCode != 201) {
+        print(response.body);
         toggleIsLoading();
         return false;
       }
@@ -263,6 +265,7 @@ class ConnectedProductsModel extends Model {
       toggleIsLoading();
       return true;
     }).catchError((error) {
+      print('Error updating $error');
       toggleIsLoading();
       return false;
     });

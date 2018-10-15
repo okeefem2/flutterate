@@ -123,7 +123,7 @@ class ProductPage extends StatelessWidget {
                 Container(
                     margin: EdgeInsets.symmetric(vertical: 10.0),
                     child: _buildDescriptionRow(product.description)),
-                AddressTag('Nightvale, USA'),
+                AddressTag(product.locationAddress != null ? product.locationAddress : 'Not Set'),
                 Container(
                   child: _buildButtonRow(context, product.favorited),
                   padding: EdgeInsets.all(10.0),

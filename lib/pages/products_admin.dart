@@ -29,6 +29,7 @@ class ProductsAdminPage extends StatelessWidget {
             LogoutListTile()
           ]));
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -43,7 +44,7 @@ class ProductsAdminPage extends StatelessWidget {
               ),
               Tab(
                 text: 'Add Product',
-                icon: Icon(Icons.add)
+                icon: Icon(Icons.add),
               ),
             ]),
           ),

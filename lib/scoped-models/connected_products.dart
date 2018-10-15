@@ -7,6 +7,7 @@ import 'dart:async';
 import '../enums/auth_mode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/subjects.dart';
+import '../models/location_data.dart';
 
 class ConnectedProductsModel extends Model {
   List<Product> _products = [];
@@ -37,6 +38,7 @@ class ConnectedProductsModel extends Model {
   }
 
   void selectProduct(String id) {
+    print('Selecting product $id');
     _selectedProductId = id;
     if (_selectedProductId != null) {
       notifyListeners();
@@ -156,7 +158,8 @@ class ConnectedProductsModel extends Model {
   // Product specific actions, these could probably be added to the products scoped model
 
   Future<bool> addProduct(
-      {String title, String description, double price, String imageUrl}) {
+      {String title, String description, double price,
+       String imageUrl, LocationData locationData}) {
     toggleIsLoading();
     print('adding a product');
     final Product productToSave = Product(
@@ -165,7 +168,10 @@ class ConnectedProductsModel extends Model {
         price: price,
         userId: _authenticatedUser.id,
         userEmail: _authenticatedUser.email,
-        imageUrl: imageUrl);
+        imageUrl: imageUrl,
+        locationLatitude: locationData.latitude,
+        locationLongitude: locationData.longitude,
+        locationAddress: locationData.address);
     return http
         .post(
             'https://flutterate-api.firebaseio.com/products.json?auth=${_authenticatedUser != null ? _authenticatedUser.authToken : ''}',
@@ -184,7 +190,10 @@ class ConnectedProductsModel extends Model {
           price: price,
           userId: _authenticatedUser.id,
           userEmail: _authenticatedUser.email,
-          imageUrl: imageUrl);
+          imageUrl: imageUrl,
+          locationLatitude: locationData.latitude,
+          locationLongitude: locationData.longitude,
+          locationAddress: locationData.address);
       _products.add(newProduct);
       toggleIsLoading();
       return true;
@@ -219,12 +228,17 @@ class ConnectedProductsModel extends Model {
       {String title,
       String description,
       double price,
-      String imageUrl}) {
-    toggleIsLoading();
-    print('replacing');
+      String imageUrl,
+      LocationData locationData}) {
     final int selectedProductIndex = products
         .indexWhere((Product product) => product.id == _selectedProductId);
     final oldProduct = _products[selectedProductIndex];
+    if (_authenticatedUser.id != oldProduct.userId) {
+      print('You do not own this product silly');
+      return;
+    }
+    toggleIsLoading();
+    print('replacing');
     final Product newProduct = Product(
         id: oldProduct.id,
         title: title,
@@ -232,7 +246,10 @@ class ConnectedProductsModel extends Model {
         price: price,
         userId: oldProduct.userId,
         userEmail: oldProduct.userEmail,
-        imageUrl: imageUrl);
+        imageUrl: imageUrl,
+        locationLatitude: locationData.latitude,
+        locationLongitude: locationData.longitude,
+        locationAddress: locationData.address);
     return http
         .put(
             'https://flutterate-api.firebaseio.com/products/${oldProduct.id}.json?auth=${_authenticatedUser != null ? _authenticatedUser.authToken : ''}',

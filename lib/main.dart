@@ -6,8 +6,10 @@ import './pages/products_admin.dart';
 import './pages/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/main.dart';
+import 'package:map_view/map_view.dart';
 
 void main() {
+  MapView.setApiKey('AIzaSyBcz50gxQeynJ923eU9awz_gZuCrFVHn4M');
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;
@@ -64,7 +66,6 @@ class _FlutterateState extends State<Flutterate> {
             '/auth': (BuildContext context) => _isAuthenticated ? AuthPage() : AuthPage(),
           },
           onGenerateRoute: (RouteSettings settings) {
-            _model.selectProduct(null);
             final List<String> pathElements = settings.name.split('/');
             if (pathElements[0] != '') {
               return null;

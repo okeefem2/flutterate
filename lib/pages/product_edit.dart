@@ -3,6 +3,8 @@ import '../models/product.dart';
 import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:async';
+import '../widgets/shared/location_input.dart';
+import '../models/location_data.dart';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -19,7 +21,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'description': null,
     'price': null,
     'favorited': false,
-    'imageUrl': 'assets/your_own_empty_heart.jpg'
+    'imageUrl': 'assets/your_own_empty_heart.jpg',
+    'location': null
   };
 
   Widget _buildTextField(
@@ -45,7 +48,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   void _onSubmit(
-      Function addProduct, Function updateProduct, Function setSelectedProduct,
+      Function addProduct, Function updateProduct, Function selectProduct,
       [String selectedProductId]) {
     var validationSuccess = _formKey.currentState.validate();
     if (validationSuccess) {
@@ -62,17 +65,20 @@ class _ProductEditPageState extends State<ProductEditPage> {
             description: _formData['description'],
             title: _formData['title'],
             price: _formData['price'],
-            imageUrl: _formData['imageUrl']);
+            imageUrl: _formData['imageUrl'],
+            locationData: _formData['location']);
       } else {
         requestFinished = addProduct(
             description: _formData['description'],
             title: _formData['title'],
             price: _formData['price'],
-            imageUrl: _formData['imageUrl']);
+            imageUrl: _formData['imageUrl'],
+            locationData: _formData['location']);
       }
       requestFinished.then((bool success) {
+        print('submitting product form');
         if (success) {
-          Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null));
+          Navigator.pushReplacementNamed(context, '/products').then((_) => selectProduct(null));
         } else {
           showDialog(context: context, builder: (BuildContext context) {
             return AlertDialog(
@@ -88,7 +94,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
           });
         }
       });
-      
     }
   }
 
@@ -151,6 +156,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                         keyboardType: TextInputType.number,
                         initialValue:
                             product != null ? product.price.toString() : ''),
+                    LocationInput(_setLocation),
                     Container(
                       margin: EdgeInsets.all(8.0),
                       child: _buildSubmitButton(),
@@ -172,6 +178,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
     });
   }
 
+  void _setLocation(LocationData locationData) {
+    _formData['location'] = locationData;
+  }
+
   @override
   Widget build(BuildContext context) {
     // return Center(
@@ -190,12 +200,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
         builder: (BuildContext context, Widget child, MainModel model) {
       final Widget pageContent =
           _buildPageContent(context, model.selectedProduct);
-      return model.selectedProductId == null
+      return WillPopScope(
+          onWillPop: () {
+            model.selectProduct(null);
+            print('back button pressed');
+            Navigator.pop(context, false);
+            return Future.value(false);
+          }, child: model.selectedProductId == null
           ? pageContent
           : Scaffold(
               appBar: AppBar(title: Text('Edit Product')),
               body: pageContent,
-            );
+            )
+      );
     });
   }
 }

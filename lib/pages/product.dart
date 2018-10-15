@@ -86,49 +86,51 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        // widget that registers a callback listening to the back button
-        onWillPop: () {
-      print('back button pressed');
-      // Since this is implemented, default functionality is not valid
-      // We need to navigate manually now
-      Navigator.pop(context, false);
-      return Future.value(
-          false); // This is were route guards can be implemented
-      // returning false in this case because we are manually calling pop, otherwise the app will try to pop again when
-      // This method resolves as true
-    }, child: ScopedModelDescendant<MainModel>(
-            // Builder is called whenever the model changes
-            builder: (BuildContext context, Widget child, MainModel model) {
+    return ScopedModelDescendant<MainModel>(
+        // Builder is called whenever the model changes
+        builder: (BuildContext context, Widget child, MainModel model) {
       final Product product = model.selectedProduct;
 
-      return Scaffold(
-        appBar: AppBar(title: Text(product.title)),
-        body: Center(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            FadeInImage(
-              image: AssetImage(product.imageUrl),
-              height: 300.0,
-              fit: BoxFit.cover, // Auto zoom the image
-              placeholder: AssetImage(product.imageUrl),
-            ),
-            Container(
-                margin: EdgeInsets.only(top: 10.0),
-                child: _buildTitlePriceRow(
-                    product.title, product.price.toString())),
-            Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
-                child: _buildDescriptionRow(product.description)),
-            AddressTag('Nightvale, USA'),
-            Container(
-              child: _buildButtonRow(context, product.favorited),
-              padding: EdgeInsets.all(10.0),
-            ),
-          ],
-        )),
-      );
-    }));
+      return WillPopScope(
+          // widget that registers a callback listening to the back button
+          onWillPop: () {
+            model.selectProduct(null);
+            print('back button pressed');
+            // Since this is implemented, default functionality is not valid
+            // We need to navigate manually now
+            Navigator.pop(context, false);
+            return Future.value(
+                false); // This is were route guards can be implemented
+            // returning false in this case because we are manually calling pop, otherwise the app will try to pop again when
+            // This method resolves as true
+          },
+          child: Scaffold(
+            appBar: AppBar(title: Text(product.title)),
+            body: Center(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                FadeInImage(
+                  image: AssetImage(product.imageUrl),
+                  height: 300.0,
+                  fit: BoxFit.cover, // Auto zoom the image
+                  placeholder: AssetImage(product.imageUrl),
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: _buildTitlePriceRow(
+                        product.title, product.price.toString())),
+                Container(
+                    margin: EdgeInsets.symmetric(vertical: 10.0),
+                    child: _buildDescriptionRow(product.description)),
+                AddressTag('Nightvale, USA'),
+                Container(
+                  child: _buildButtonRow(context, product.favorited),
+                  padding: EdgeInsets.all(10.0),
+                ),
+              ],
+            )),
+          ));
+    });
   }
 }

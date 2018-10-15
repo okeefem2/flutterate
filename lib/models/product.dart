@@ -10,6 +10,9 @@ class Product {
   final bool favorited;
   final String userId;
   final String userEmail;
+  final double locationLatitude;
+  final double locationLongitude;
+  final String locationAddress;
 
   Product({
     this.id = '',
@@ -19,7 +22,10 @@ class Product {
     this.imageUrl = 'assets/your_own_empty_heart.jpg',
     this.favorited = false,
     @required this.userId,
-    @required this.userEmail
+    @required this.userEmail,
+    this.locationLatitude,
+    this.locationLongitude,
+    this.locationAddress
   });
 
   Product.fromJson(Map<String, dynamic> json, String userId)
@@ -31,7 +37,10 @@ class Product {
         favorited = json['favoritedUsers'] != null ?
                     (json['favoritedUsers'] as Map<String, dynamic>).containsKey(userId) : false,
         userId = json['userId'],
-        userEmail = json['userEmail'];
+        userEmail = json['userEmail'],
+        locationLatitude = json['locationLatitude'],
+        locationLongitude = json['locationLongitude'],
+        locationAddress = json['locationAddress'];
 
   Map<String, dynamic> toJson() => {
       'title': title,
@@ -39,6 +48,9 @@ class Product {
       'imageUrl': imageUrl,
       'userId': userId,
       'userEmail': userEmail,
-      'price': price.toString()
+      'price': price.toString(),
+      'locationLatitude': locationLatitude.toString(),
+      'locationLongitude': locationLongitude.toString(),
+      'locationAddress': locationAddress,
     };
 }

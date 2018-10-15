@@ -24,12 +24,12 @@ class _ProductListPageState extends State<ProductListPage> {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
-        model.selectProduct(model.products[index].id);
+        model.selectProduct(model.userProducts[index].id);
         Navigator
             .of(context)
             .push(MaterialPageRoute(builder: (BuildContext context) {
           return ProductEditPage();
-        })).then((_) => model.selectProduct(null));
+        }));
       },
     );
   }
@@ -41,10 +41,11 @@ class _ProductListPageState extends State<ProductListPage> {
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
           return Dismissible(
-              key: Key(model.products[index].title),
+              key: Key(model.userProducts[index].title),
               onDismissed: (DismissDirection direction) {
                 if (direction == DismissDirection.endToStart) {
-                  model.selectProduct(model.products[index].id);
+                  print('removing product');
+                  model.selectProduct(model.userProducts[index].id);
                   model.removeProduct();
                   model.selectProduct(null);
                 } else if (direction == DismissDirection.startToEnd) {
@@ -57,15 +58,15 @@ class _ProductListPageState extends State<ProductListPage> {
                 ListTile(
                   leading: CircleAvatar(
                       backgroundImage:
-                          AssetImage(model.products[index].imageUrl)),
-                  title: Text(model.products[index].title),
-                  subtitle: Text('\$${model.products[index].price}'),
+                          AssetImage(model.userProducts[index].imageUrl)),
+                  title: Text(model.userProducts[index].title),
+                  subtitle: Text('\$${model.userProducts[index].price}'),
                   trailing: _buildEditButton(context, index, model),
                 ),
                 Divider()
               ]));
         },
-        itemCount: model.products.length,
+        itemCount: model.userProducts.length,
       );
     });
   }

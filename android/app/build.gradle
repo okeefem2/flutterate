@@ -40,6 +40,12 @@ android {
     }
 }
 
+buildScript {
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.2-4'
+    }
+}
+
 flutter {
     source '../..'
 }

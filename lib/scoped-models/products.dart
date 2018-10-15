@@ -15,6 +15,10 @@ class ProductsModel extends ConnectedProductsModel {
     return products; // Do not return reference, IMMUTABLE
   }
 
+  List<Product> get userProducts {
+    return products != null ? products.where((Product product) => product.userId == authenticatedUser.id).toList() : [];
+  }
+
   Product get selectedProduct {
     return selectedProductId != null
         ? products
@@ -62,6 +66,7 @@ class ProductsModel extends ConnectedProductsModel {
     replaceProduct(newProduct, selectedProductIndex);
     
     notifyListeners();
+    print('toggling favorite complete');
     selectProduct(null);
   }
 

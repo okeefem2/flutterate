@@ -4,6 +4,10 @@
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>User location is required to automatically detect location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to library allows user to set product image</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Access to camera allows user to set product image</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

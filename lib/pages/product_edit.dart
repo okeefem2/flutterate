@@ -4,6 +4,7 @@ import '../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:async';
 import '../widgets/shared/location_input.dart';
+import '../widgets/shared/image_input.dart';
 import '../models/location_data.dart';
 
 class ProductEditPage extends StatefulWidget {
@@ -25,14 +26,24 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'location': null
   };
 
+  final _titleTextController = TextEditingController();
+  final _descriptionTextController = TextEditingController();
+  final _priceTextController = TextEditingController();
+
   Widget _buildTextField(
       String labelText, Function callBack, Function validator,
       {TextInputType keyboardType = TextInputType.text,
       int maxLines = 1,
-      String initialValue = ''}) {
+      String initialValue = '', controller}) {
+        if (initialValue == null && controller.text.trim() == '') {
+          controller.text = '';
+        } else if (initialValue != null && controller.text.trim() == '') {
+          controller.text = initialValue;
+        }
     return TextFormField(
+      controller:  controller,
       validator: validator,
-      initialValue: initialValue,
+      // initialValue: initialValue,
       decoration: InputDecoration(
           labelText: labelText,
           contentPadding:
@@ -62,16 +73,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
       Future<bool> requestFinished;
       if (selectedProductId != null) {
         requestFinished = updateProduct(
-            description: _formData['description'],
-            title: _formData['title'],
-            price: _formData['price'],
+            description: _descriptionTextController.text,
+            title: _titleTextController.text,
+            price: double.parse(_priceTextController.text),
             imageUrl: _formData['imageUrl'],
             locationData: _formData['location']);
       } else {
         requestFinished = addProduct(
-            description: _formData['description'],
-            title: _formData['title'],
-            price: _formData['price'],
+            description: _descriptionTextController.text,
+            title: _titleTextController.text,
+            price: double.parse(_priceTextController.text),
             imageUrl: _formData['imageUrl'],
             locationData: _formData['location']);
       }
@@ -129,7 +140,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                       if (value.isEmpty) {
                         return 'Title is required';
                       }
-                    }, initialValue: product != null ? product.title : ''),
+                    }, initialValue: product != null ? product.title : '', controller: _titleTextController),
                     _buildTextField('Description',
                         (String change) => _formData['description'] = change,
                         (String value) {
@@ -139,7 +150,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     },
                         maxLines: 3,
                         initialValue:
-                            product != null ? product.description : ''),
+                            product != null ? product.description : '', controller: _descriptionTextController),
                     _buildTextField(
                         'Price',
                         (String change) => _formData['price'] = double
@@ -155,10 +166,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     },
                         keyboardType: TextInputType.number,
                         initialValue:
-                            product != null ? product.price.toString() : ''),
+                            product != null ? product.price.toString() : '', controller: _priceTextController),
                     LocationInput(_setLocation, product),
+                    ImageInput(_setLocation, product),
                     Container(
-                      margin: EdgeInsets.all(8.0),
+                      // margin: EdgeInsets.all(8.0),
                       child: _buildSubmitButton(),
                     )
                   ],

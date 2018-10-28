@@ -6,9 +6,37 @@ import '../widgets/shared/address_tag.dart';
 import '../models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
+import 'package:map_view/map_view.dart';
 
 // TODO start naming pages with page in it, I am confused bewtween pages and widgets sometimes
 class ProductPage extends StatelessWidget {
+
+  void _showMap(Product product) {
+    final CameraPosition cameraPosition = CameraPosition(
+      Location(product.locationLatitude, product.locationLongitude),
+      14.0 // Max says this works really well
+    );
+    final List<Marker> markers = <Marker>[
+      Marker('position', 'Position', product.locationLatitude, product.locationLongitude),
+    ];
+    final MapView mapView = MapView();
+    mapView.show(MapOptions(
+      initialCameraPosition: cameraPosition,
+      mapViewType: MapViewType.normal,
+      title: 'Product Location',
+    ), toolbarActions: [
+      ToolbarAction('Close', 1)
+    ]);
+    mapView.onToolbarAction.listen((int id) {
+      if (id == 1) {
+        mapView.dismiss();
+      }
+    });
+    mapView.onMapReady.listen((_) {
+      mapView.setMarkers(markers);
+    });
+  }
+
   _showWarningDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -123,7 +151,12 @@ class ProductPage extends StatelessWidget {
                 Container(
                     margin: EdgeInsets.symmetric(vertical: 10.0),
                     child: _buildDescriptionRow(product.description)),
-                AddressTag(product.locationAddress != null ? product.locationAddress : 'Not Set'),
+                    GestureDetector(
+                      child: AddressTag(product.locationAddress != null ? product.locationAddress : 'Not Set'),
+                      onTap: () {
+                        _showMap(product);
+                      },
+                    ),
                 Container(
                   child: _buildButtonRow(context, product.favorited),
                   padding: EdgeInsets.all(10.0),

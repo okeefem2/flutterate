@@ -142,7 +142,7 @@ class ProductPage extends StatelessWidget {
                   image: NetworkImage(product.imageUrl),
                   height: 300.0,
                   fit: BoxFit.cover, // Auto zoom the image
-                  placeholder: AssetImage('flutter.png'),
+                  placeholder: AssetImage('assets/flutter.png'),
                 ),
                 Container(
                     margin: EdgeInsets.only(top: 10.0),

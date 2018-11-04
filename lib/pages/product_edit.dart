@@ -77,7 +77,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             description: _descriptionTextController.text,
             title: _titleTextController.text,
             price: double.parse(_priceTextController.text),
-            imageUrl: _formData['imageUrl'],
+            image: _formData['imageUrl'],
             locationData: _formData['location']);
       } else {
         requestFinished = addProduct(

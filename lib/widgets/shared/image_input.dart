@@ -83,6 +83,28 @@ class _ImageInputState extends State<ImageInput> {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget previewImage = Text('Please pick an image');
+    print(widget.product);
+
+    if (_imageFile != null) {
+      previewImage = Image.file(
+        _imageFile,
+        fit: BoxFit.cover,
+        height: 300.0,
+        alignment: Alignment.topCenter,
+        width: MediaQuery.of(context).size.width,
+      );
+    } else if (widget.product != null) {
+      previewImage = Image.network(
+        widget.product.imageUrl,
+        fit: BoxFit.cover,
+        height: 300.0,
+        alignment: Alignment.topCenter,
+        width: MediaQuery.of(context).size.width,
+      );
+    }
+
     return Column(children: <Widget>[
       OutlineButton(
         borderSide:
@@ -104,14 +126,7 @@ class _ImageInputState extends State<ImageInput> {
         ),
       ),
       SizedBox(height: 10.0,),
-      _imageFile == null ? Text('Please pick an image') :
-      Image.file(
-        _imageFile,
-        fit: BoxFit.cover,
-        height: 300.0,
-        alignment: Alignment.topCenter,
-        width: MediaQuery.of(context).size.width,
-      )
+      previewImage
     ]);
   }
 }

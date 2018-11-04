@@ -285,8 +285,8 @@ class ConnectedProductsModel extends Model {
       {String title,
       String description,
       double price,
-      String imageUrl,
-      LocationData locationData}) {
+      File image,
+      LocationData locationData}) async {
         print(locationData.address);
     final int selectedProductIndex = products
         .indexWhere((Product product) => product.id == _selectedProductId);
@@ -296,6 +296,19 @@ class ConnectedProductsModel extends Model {
       return Future.value(false);
     }
     toggleIsLoading();
+    String imageUrl = oldProduct.imageUrl;
+    String imagePath = oldProduct.imagePath;
+    if (image != null) {
+      final imageUploadData = await uploadImage(image, gcImagePath: imagePath);
+      if (imageUploadData == null) {
+        print('Failed to upload image');
+        toggleIsLoading();
+        return null;
+      }
+      imageUrl = imageUploadData['imageUrl'];
+      imagePath = imageUploadData['imagePath'];
+    }
+
     print('replacing');
     final Product newProduct = Product(
         id: oldProduct.id,
@@ -305,6 +318,7 @@ class ConnectedProductsModel extends Model {
         userId: oldProduct.userId,
         userEmail: oldProduct.userEmail,
         imageUrl: imageUrl,
+        imagePath: imagePath,
         locationLatitude: locationData.latitude,
         locationLongitude: locationData.longitude,
         locationAddress: locationData.address);

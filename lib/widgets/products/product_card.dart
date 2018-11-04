@@ -70,7 +70,7 @@ class ProductCard extends StatelessWidget {
             image: NetworkImage(_product.imageUrl),
             height: 300.0,
             fit: BoxFit.cover, // Auto zoom the image
-            placeholder: AssetImage('flutter.png'),
+            placeholder: AssetImage('assets/flutter.png'),
           ),
           Container(
               margin: EdgeInsets.symmetric(vertical: 10.0),

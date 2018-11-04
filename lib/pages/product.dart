@@ -139,10 +139,10 @@ class ProductPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 FadeInImage(
-                  image: AssetImage(product.imageUrl),
+                  image: NetworkImage(product.imageUrl),
                   height: 300.0,
                   fit: BoxFit.cover, // Auto zoom the image
-                  placeholder: AssetImage(product.imageUrl),
+                  placeholder: AssetImage('flutter.png'),
                 ),
                 Container(
                     margin: EdgeInsets.only(top: 10.0),

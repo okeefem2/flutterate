@@ -15,6 +15,7 @@ dependencies:
   map_view: ^0.0.14
   location: ^1.4.1
   image_picker: ^0.4.10
+  mime: ^0.9.6+2
   
 
 dev_dependencies:

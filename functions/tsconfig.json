@@ -9,6 +9,7 @@
   },
   "compileOnSave": true,
   "include": [
-    "src"
+    "src",
+    "flutterate-api-firebase-adminsdk-cc9jd-57844efdd3.json"
   ]
 }

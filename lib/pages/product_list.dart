@@ -57,8 +57,8 @@ class _ProductListPageState extends State<ProductListPage> {
               child: Column(children: <Widget>[
                 ListTile(
                   leading: CircleAvatar(
-                      backgroundImage:
-                          AssetImage(model.userProducts[index].imageUrl)),
+                      backgroundImage: NetworkImage(model.userProducts[index].imageUrl)
+                  ),
                   title: Text(model.userProducts[index].title),
                   subtitle: Text('\$${model.userProducts[index].price}'),
                   trailing: _buildEditButton(context, index, model),

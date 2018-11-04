@@ -43,6 +43,7 @@ class ProductsModel extends ConnectedProductsModel {
         userId: selectedProduct.userId,
         userEmail: selectedProduct.userEmail,
         imageUrl: selectedProduct.imageUrl,
+        imagePath: selectedProduct.imagePath,
         locationAddress: selectedProduct.locationAddress,
         locationLatitude: selectedProduct.locationLatitude,
         locationLongitude: selectedProduct.locationLongitude,

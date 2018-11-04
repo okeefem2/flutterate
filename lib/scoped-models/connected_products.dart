@@ -8,6 +8,9 @@ import '../enums/auth_mode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/subjects.dart';
 import '../models/location_data.dart';
+import 'dart:io';
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ConnectedProductsModel extends Model {
   List<Product> _products = [];
@@ -157,18 +160,71 @@ class ConnectedProductsModel extends Model {
 
   // Product specific actions, these could probably be added to the products scoped model
 
+  Future<Map<String, dynamic>> uploadImage(File image, {String gcImagePath}) async {
+    print('Uploading image!');
+    print(image);
+    final mimeTypeData = lookupMimeType(image.path).split('/'); // 3rd party mime package
+    final uploadRequest = http.MultipartRequest(
+      'POST',
+      Uri.parse('https://us-central1-flutterate-api.cloudfunctions.net/storeImage')
+    );
+
+    print(image.path);
+
+    final uploadFile = await http.MultipartFile.fromPath(
+      'image',
+      image.path,
+      contentType: MediaType(mimeTypeData[0], mimeTypeData[1])
+    );
+
+    uploadRequest.files.add(uploadFile);
+
+    if (gcImagePath != null) {
+      uploadRequest.fields['imagePath'] = Uri.encodeComponent(gcImagePath);
+    }
+    print('Setting headers!');
+    uploadRequest.headers['Authorization'] = 'Bearer ${_authenticatedUser.authToken}';
+
+    try {
+      final streamedResponse = await uploadRequest.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      print('Got a response!');
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        print('Something went wrong, receiced response ${response.statusCode} uploading image');
+        print(response.body);
+        return null;
+      }
+      print('Got a success response!');
+      final responseData = json.decode(response.body); // { imageUrl: string, imagePath: string } from cloud function
+
+      return responseData;
+
+    } catch(error) {
+      print(error);
+      return null;
+    }
+  }
+
   Future<bool> addProduct(
       {String title, String description, double price,
-       String imageUrl, LocationData locationData}) {
+       File image, LocationData locationData}) async {
     toggleIsLoading();
     print('adding a product');
+    final imageUploadData = await uploadImage(image);
+    if (imageUploadData == null) {
+      print('Failed to upload image');
+      toggleIsLoading();
+      return null;
+    }
     final Product productToSave = Product(
         title: title,
         description: description,
         price: price,
         userId: _authenticatedUser.id,
         userEmail: _authenticatedUser.email,
-        imageUrl: imageUrl,
+        imageUrl: imageUploadData['imageUrl'],
+        imagePath: imageUploadData['imagePath'],
         locationLatitude: locationData.latitude,
         locationLongitude: locationData.longitude,
         locationAddress: locationData.address);
@@ -190,7 +246,8 @@ class ConnectedProductsModel extends Model {
           price: price,
           userId: _authenticatedUser.id,
           userEmail: _authenticatedUser.email,
-          imageUrl: imageUrl,
+          imageUrl: imageUploadData['imageUrl'],
+          imagePath: imageUploadData['imagePath'],
           locationLatitude: locationData.latitude,
           locationLongitude: locationData.longitude,
           locationAddress: locationData.address);

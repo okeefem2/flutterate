@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as fbAdmin from 'firebase-admin';
 import * as uuid from 'uuid/v4';
 import { Storage } from '@google-cloud/storage';
-import { Busboy } from 'busboy';
+import * as Busboy from 'busboy';
 const cors = Cors({ origin: true });
 
 const gcconfig = {
@@ -17,7 +17,7 @@ const gcconfig = {
 const gcs = new Storage(gcconfig);
 
 fbAdmin.initializeApp({
-  credential: fbAdmin.credential.cert(require('./flutterate-api-firebase-adminsdk-cc9jd-57844efdd3.json'))
+  credential: fbAdmin.credential.cert(require('../flutterate-api-firebase-adminsdk-cc9jd-57844efdd3.json'))
 });
 
 export const storeImage = functions.https.onRequest((req: functions.Request, res: functions.Response) => {
@@ -36,7 +36,7 @@ export const storeImage = functions.https.onRequest((req: functions.Request, res
     let idToken;
     idToken = req.headers.authorization.split('Bearer ')[1];
 
-    const busboy = new Busboy({ headers: req.headers });
+    const busboy = Busboy({ headers: req.headers });
     let uploadData;
     let oldImagePath;
 

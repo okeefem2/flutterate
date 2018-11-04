@@ -67,10 +67,10 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           FadeInImage(
-            image: AssetImage(_product.imageUrl),
+            image: NetworkImage(_product.imageUrl),
             height: 300.0,
             fit: BoxFit.cover, // Auto zoom the image
-            placeholder: AssetImage(_product.imageUrl),
+            placeholder: AssetImage('flutter.png'),
           ),
           Container(
               margin: EdgeInsets.symmetric(vertical: 10.0),

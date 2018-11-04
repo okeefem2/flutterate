@@ -7,6 +7,7 @@ class Product {
   final String description;
   final double price;
   final String imageUrl;
+  final String imagePath;
   final bool favorited;
   final String userId;
   final String userEmail;
@@ -19,10 +20,11 @@ class Product {
     @required this.title, 
     @required this.description, 
     @required this.price, 
-    this.imageUrl = 'assets/flutter.png',
     this.favorited = false,
     @required this.userId,
     @required this.userEmail,
+    this.imageUrl,
+    this.imagePath, 
     this.locationLatitude,
     this.locationLongitude,
     this.locationAddress
@@ -34,6 +36,7 @@ class Product {
         description = json['description'],
         price = double.parse(json['price']),
         imageUrl = json['imageUrl'],
+        imagePath = json['imagePath'],
         favorited = json['favoritedUsers'] != null ?
                     (json['favoritedUsers'] as Map<String, dynamic>).containsKey(userId) : false,
         userId = json['userId'],
@@ -46,6 +49,7 @@ class Product {
       'title': title,
       'description': description,
       'imageUrl': imageUrl,
+      'imagePath': imagePath,
       'userId': userId,
       'userEmail': userEmail,
       'price': price.toString(),

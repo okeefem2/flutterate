@@ -6,6 +6,7 @@ import 'dart:async';
 import '../widgets/shared/location_input.dart';
 import '../widgets/shared/image_input.dart';
 import '../models/location_data.dart';
+import 'dart:io';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'description': null,
     'price': null,
     'favorited': false,
-    'imageUrl': 'assets/flutter.png',
+    'imageUrl': null,
     'location': null
   };
 
@@ -62,7 +63,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       Function addProduct, Function updateProduct, Function selectProduct,
       [String selectedProductId]) {
     var validationSuccess = _formKey.currentState.validate();
-    if (validationSuccess) {
+    if (validationSuccess && (_formData['imageUrl'] != null || selectedProductId != null)) { // Only allow null image if editing existing
       _formKey.currentState.save();
       // final newProduct = new Product(
       //     description: _formData['description'],
@@ -83,7 +84,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             description: _descriptionTextController.text,
             title: _titleTextController.text,
             price: double.parse(_priceTextController.text),
-            imageUrl: _formData['imageUrl'],
+            image: _formData['imageUrl'],
             locationData: _formData['location']);
       }
       requestFinished.then((bool success) {
@@ -168,7 +169,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                         initialValue:
                             product != null ? product.price.toString() : '', controller: _priceTextController),
                     LocationInput(_setLocation, product),
-                    ImageInput(_setLocation, product),
+                    ImageInput(_setImage, product),
                     Container(
                       // margin: EdgeInsets.all(8.0),
                       child: _buildSubmitButton(),
@@ -192,6 +193,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   void _setLocation(LocationData locationData) {
     _formData['location'] = locationData;
+  }
+
+  void _setImage(File image) {
+    _formData['imageUrl'] = image;
   }
 
   @override

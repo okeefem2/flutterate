@@ -11,13 +11,13 @@ const cors = Cors({ origin: true });
 
 const gcconfig = {
   projectId: 'flutterate-api',
-  keyFilename: 'your-project-id.json'
+  keyFilename: 'flutterate-api-firebase-adminsdk-cc9jd-57844efdd3.json'
 };
 
 const gcs = new Storage(gcconfig);
 
 fbAdmin.initializeApp({
-  credential: fbAdmin.credential.cert(require('./your-project-id.json'))
+  credential: fbAdmin.credential.cert(require('./flutterate-api-firebase-adminsdk-cc9jd-57844efdd3.json'))
 });
 
 export const storeImage = functions.https.onRequest((req: functions.Request, res: functions.Response) => {

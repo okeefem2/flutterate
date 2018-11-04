@@ -17,3 +17,6 @@ class Flutterate extends StatefulWidget {
       return null;
     }
 }
+
+// To start iphone sim
+open -a Simulator.app

@@ -30,7 +30,7 @@ class ProductsModel extends ConnectedProductsModel {
     return _showFavorites;
   }
 
-  void toggleProductFavorite() async {
+  void toggleProductFavorite({clearSelected = true}) async {
     final bool favorite = !selectedProduct.favorited;
     final int selectedProductIndex = products
         .indexWhere((Product product) => product.id == selectedProductId);
@@ -75,7 +75,9 @@ class ProductsModel extends ConnectedProductsModel {
     
     notifyListeners();
     print('toggling favorite complete');
-    selectProduct(null);
+    if (clearSelected) {
+      selectProduct(null);
+    }
   }
 
   void toggleDisplayMode() {

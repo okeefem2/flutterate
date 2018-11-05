@@ -90,10 +90,30 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   void _getUserLocation() async {
-    final location = geolocation.Location();
-    final userLocation = await location.getLocation();
-    final userAddress = await _getAddress(userLocation['latitude'], userLocation['longitude']);
-    _getStaticMap(location: userAddress);
+    try {
+      final location = geolocation.Location();
+      final userLocation = await location.getLocation();
+      final userAddress = await _getAddress(userLocation['latitude'], userLocation['longitude']);
+      _getStaticMap(location: userAddress);
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Could not fetch location'),
+            content: Text('Please add address manually'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        }
+      );
+    }
   }
 
   Future<String> _getAddress(double latitude, double longitude) async {

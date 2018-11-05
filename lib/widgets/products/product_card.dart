@@ -8,21 +8,20 @@ import 'package:scoped_model/scoped_model.dart';
 
 class ProductCard extends StatelessWidget {
   final Product _product;
-  final int _productIndex;
   final Function _replaceProduct;
 
-  ProductCard(this._product, this._productIndex, [this._replaceProduct]);
+  ProductCard(this._product, [this._replaceProduct]);
 
   Widget _buildTitlePriceRow() {
     return Row(
       mainAxisAlignment:
           MainAxisAlignment.center, // Main axis of a row is horizontal
       children: <Widget>[
-        TitleDefault(_product.title),
-        SizedBox(
+        Flexible(child: TitleDefault(_product.title)),
+        Flexible( child: SizedBox(
           width: 10.0,
-        ),
-        PriceTag(_product.price.toString())
+        )),
+        Flexible(child: PriceTag(_product.price.toString()))
       ],
     );
   }
@@ -34,12 +33,12 @@ class ProductCard extends StatelessWidget {
         IconButton(
             color: Colors.purple,
             iconSize: 35.0,
-            icon: Icon(model.products[_productIndex].favorited == true
+            icon: Icon(_product.favorited == true
                 ? Icons.favorite
                 : Icons.favorite_border),
             // child: Text('Details'),
             onPressed: () {
-              model.selectProduct(model.products[_productIndex].id);
+              model.selectProduct(_product.id);
               model.toggleProductFavorite();
             }),
         IconButton(
@@ -50,7 +49,7 @@ class ProductCard extends StatelessWidget {
           onPressed: () => Navigator.pushNamed<bool>(
                       // Tell the type of the future
                       context,
-                      '/product/' + model.products[_productIndex].id)
+                      '/product/' + _product.id)
                   .then((value) {
                 if (value) {
                   // removeProduct(index);

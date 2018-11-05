@@ -74,7 +74,7 @@ class _MenuFabState extends State<MenuFab> with TickerProviderStateMixin {
                   heroTag: 'favorite',
                   mini: true,
                   onPressed: () {
-                    model.toggleProductFavorite();
+                    model.toggleProductFavorite(clearSelected: false);
                   },
                   child: Icon(
                       model.selectedProduct.favorited

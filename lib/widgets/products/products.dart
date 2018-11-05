@@ -18,7 +18,7 @@ class Products extends StatelessWidget {
     return products.length > 0
         ? ListView.builder(
             itemBuilder: (BuildContext context, int index) => 
-              ProductCard(products[index], index),
+              ProductCard(products[index]),
             itemCount: products.length,
           )
         : Center(

@@ -121,7 +121,7 @@ class ConnectedProductsModel extends Model {
 
   void logout() async {
     _authTimer.cancel();
-    _authenticatedUser = null;
+    selectProduct(null);
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.remove('token');

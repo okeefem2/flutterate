@@ -66,18 +66,23 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          FadeInImage(
-            image: NetworkImage(_product.imageUrl),
-            height: 300.0,
-            fit: BoxFit.cover, // Auto zoom the image
-            placeholder: AssetImage('assets/flutter.png'),
+          Hero(
+            child: FadeInImage(
+              image: NetworkImage(_product.imageUrl),
+              height: 300.0,
+              fit: BoxFit.cover, // Auto zoom the image
+              placeholder: AssetImage('assets/flutter.png'),
+            ),
+            tag: _product.id,
           ),
           Container(
               margin: EdgeInsets.symmetric(vertical: 10.0),
               // padding: EdgeInsets.only(top: 10.0),
               // margin: EdgeInsets.symmetric(vertical: 10.0),
               child: _buildTitlePriceRow()),
-          AddressTag(_product.locationAddress != null ? _product.locationAddress : 'Not Set'),
+          AddressTag(_product.locationAddress != null
+              ? _product.locationAddress
+              : 'Not Set'),
           _buildActionButtons(context)
         ],
       ),

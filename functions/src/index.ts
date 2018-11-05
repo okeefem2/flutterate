@@ -91,3 +91,14 @@ export const storeImage = functions.https.onRequest((req: functions.Request, res
     return busboy.end(req.body);
   });
 });
+
+export const deleteImage = functions.database
+  .ref('/products/{productId}')
+  .onDelete(snapshot => {
+    const imageData = snapshot.val();
+    const imagePath = imageData.imagePath;
+
+    const bucket = gcs.bucket('flutterate-api.appspot.com');
+    return imagePath === 'images/flutter.png' ? null : bucket.file(imagePath).delete();
+  });
+

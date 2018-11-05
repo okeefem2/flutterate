@@ -7,26 +7,27 @@ import '../models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 import 'package:map_view/map_view.dart';
+import '../widgets/shared/menu_fab.dart';
 
 // TODO start naming pages with page in it, I am confused bewtween pages and widgets sometimes
 class ProductPage extends StatelessWidget {
-
   void _showMap(Product product) {
     final CameraPosition cameraPosition = CameraPosition(
-      Location(product.locationLatitude, product.locationLongitude),
-      14.0 // Max says this works really well
-    );
+        Location(product.locationLatitude, product.locationLongitude),
+        14.0 // Max says this works really well
+        );
     final List<Marker> markers = <Marker>[
-      Marker('position', 'Position', product.locationLatitude, product.locationLongitude),
+      Marker('position', 'Position', product.locationLatitude,
+          product.locationLongitude),
     ];
     final MapView mapView = MapView();
-    mapView.show(MapOptions(
-      initialCameraPosition: cameraPosition,
-      mapViewType: MapViewType.normal,
-      title: 'Product Location',
-    ), toolbarActions: [
-      ToolbarAction('Close', 1)
-    ]);
+    mapView.show(
+        MapOptions(
+          initialCameraPosition: cameraPosition,
+          mapViewType: MapViewType.normal,
+          title: 'Product Location',
+        ),
+        toolbarActions: [ToolbarAction('Close', 1)]);
     mapView.onToolbarAction.listen((int id) {
       if (id == 1) {
         mapView.dismiss();
@@ -82,14 +83,18 @@ class ProductPage extends StatelessWidget {
       mainAxisAlignment:
           MainAxisAlignment.center, // Main axis of a row is horizontal
       children: <Widget>[
-        Text(
-          description,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            // fontFamily: 'Oswald' // This is how we would change the font, I don't like this one though
-          ),
-        ),
+        Expanded(
+          child:
+
+            Text(
+              description,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                // fontFamily: 'Oswald' // This is how we would change the font, I don't like this one though
+              ),
+            ),
+        )
       ],
     );
   }
@@ -133,36 +138,56 @@ class ProductPage extends StatelessWidget {
             // This method resolves as true
           },
           child: Scaffold(
-            appBar: AppBar(title: Text(product.title)),
-            body: Center(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                FadeInImage(
-                  image: NetworkImage(product.imageUrl),
-                  height: 300.0,
-                  fit: BoxFit.cover, // Auto zoom the image
-                  placeholder: AssetImage('assets/flutter.png'),
-                ),
-                Container(
-                    margin: EdgeInsets.only(top: 10.0),
-                    child: _buildTitlePriceRow(
-                        product.title, product.price.toString())),
-                Container(
-                    margin: EdgeInsets.symmetric(vertical: 10.0),
-                    child: _buildDescriptionRow(product.description)),
-                    GestureDetector(
-                      child: AddressTag(product.locationAddress != null ? product.locationAddress : 'Not Set'),
-                      onTap: () {
-                        _showMap(product);
-                      },
+            body: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  expandedHeight: 256.0,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(product.title),
+                    background: Hero(
+                      tag: product.id,
+                      child: FadeInImage(
+                        image: NetworkImage(product.imageUrl),
+                        height: 300.0,
+                        fit: BoxFit.cover, // Auto zoom the image
+                        placeholder: AssetImage('assets/flutter.png'),
+                      ),
                     ),
-                Container(
-                  child: _buildButtonRow(context, product.favorited),
-                  padding: EdgeInsets.all(10.0),
+                  ),
                 ),
+                SliverList(
+                  delegate: SliverChildListDelegate(<Widget>[
+                    Center(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            margin: EdgeInsets.only(top: 10.0),
+                            child: _buildTitlePriceRow(
+                                product.title, product.price.toString())),
+                        Container(
+                            margin: EdgeInsets.symmetric(vertical: 10.0),
+                            child: _buildDescriptionRow(product.description)),
+                        GestureDetector(
+                          child: AddressTag(product.locationAddress != null
+                              ? product.locationAddress
+                              : 'Not Set'),
+                          onTap: () {
+                            _showMap(product);
+                          },
+                        ),
+                        Container(
+                          child: _buildButtonRow(context, product.favorited),
+                          padding: EdgeInsets.all(10.0),
+                        ),
+                      ],
+                    )),
+                  ]),
+                )
               ],
-            )),
+            ),
+            floatingActionButton: MenuFab(product),
           ));
     });
   }

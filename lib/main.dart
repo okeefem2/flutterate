@@ -7,7 +7,7 @@ import './pages/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/main.dart';
 import 'package:map_view/map_view.dart';
-
+import './helpers/custom_route.dart';
 void main() {
   MapView.setApiKey('AIzaSyBcz50gxQeynJ923eU9awz_gZuCrFVHn4M');
   // debugPaintSizeEnabled = true;
@@ -71,7 +71,7 @@ class _FlutterateState extends State<Flutterate> {
               return null;
             }
             if (!_isAuthenticated) {
-              return MaterialPageRoute<bool>(
+              return CustomRoute<bool>(
                     builder: (BuildContext context) => AuthPage());
             }
             var route;

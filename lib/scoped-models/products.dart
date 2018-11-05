@@ -49,6 +49,8 @@ class ProductsModel extends ConnectedProductsModel {
         locationLongitude: selectedProduct.locationLongitude,
         favorited: favorite);
     if (favorite) {
+      print('adding user to favorite list');
+      print(authenticatedUser.email);
       final http.Response response = await http.put(
           'https://flutterate-api.firebaseio.com/products/${selectedProduct.id}/favoritedUsers/${authenticatedUser.id}.json?auth=${authenticatedUser != null ? authenticatedUser.authToken : ''}',
           body: json.encode(true));
@@ -59,6 +61,8 @@ class ProductsModel extends ConnectedProductsModel {
         return;
       }
     } else {
+      print('removing user from favorite list');
+      print(authenticatedUser.email);
       final http.Response response = await http.delete(
           'https://flutterate-api.firebaseio.com/products/${selectedProduct.id}/favoritedUsers/${authenticatedUser.id}.json?auth=${authenticatedUser != null ? authenticatedUser.authToken : ''}');
       if (response.statusCode != 200 && response.statusCode != 201) {

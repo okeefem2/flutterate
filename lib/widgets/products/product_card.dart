@@ -8,9 +8,8 @@ import 'package:scoped_model/scoped_model.dart';
 
 class ProductCard extends StatelessWidget {
   final Product _product;
-  final Function _replaceProduct;
 
-  ProductCard(this._product, [this._replaceProduct]);
+  ProductCard(this._product);
 
   Widget _buildTitlePriceRow() {
     return Row(

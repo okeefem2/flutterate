@@ -111,14 +111,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
 // This is just here for learning
 // Perfect for making custom widgets that can react to gestures
-  Widget _buildCustomButton() {
-    return GestureDetector(
-        // Many on gesture event listeners here!!! YAY
-        child: Container(
-      color: Colors.greenAccent,
-      child: Text('Custom Button'),
-    ));
-  }
+  // Widget _buildCustomButton() {
+  //   return GestureDetector(
+  //       // Many on gesture event listeners here!!! YAY
+  //       child: Container(
+  //     color: Colors.greenAccent,
+  //     child: Text('Custom Button'),
+  //   ));
+  // }
 
   Widget _buildPageContent(BuildContext context, Product product) {
     final double deviceWidth = MediaQuery.of(context).size.width;

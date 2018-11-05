@@ -1,9 +1,7 @@
-import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
 import './connected_products.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:async';
 
 class ProductsModel extends ConnectedProductsModel {
   bool _showFavorites = false;

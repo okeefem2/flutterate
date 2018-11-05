@@ -8,8 +8,9 @@ import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/main.dart';
 import 'package:map_view/map_view.dart';
 import './helpers/custom_route.dart';
+import './shared/config.dart';
 void main() {
-  MapView.setApiKey('AIzaSyBcz50gxQeynJ923eU9awz_gZuCrFVHn4M');
+  MapView.setApiKey(apiKey);
   // debugPaintSizeEnabled = true;
   // debugPaintBaselinesEnabled = true;
   // debugPaintPointersEnabled = true;

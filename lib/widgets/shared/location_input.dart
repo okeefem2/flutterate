@@ -6,6 +6,7 @@ import 'dart:async';
 import '../../models/location_data.dart';
 import '../../models/product.dart';
 import 'package:location/location.dart' as geolocation;
+import '../../shared/config.dart';
 
 class LocationInput extends StatefulWidget {
   final Function setLocation;
@@ -56,7 +57,7 @@ class _LocationInputState extends State<LocationInput> {
     }
     final Uri geocodingUri = Uri.https('maps.googleapis.com', '/maps/api/geocode/json', {
       'address': location,
-      'key': 'AIzaSyBcz50gxQeynJ923eU9awz_gZuCrFVHn4M'
+      'key': apiKey
     });
     final http.Response response = await http.get(geocodingUri);
     print(response.statusCode);
@@ -75,7 +76,7 @@ class _LocationInputState extends State<LocationInput> {
                                    address: formattedAddress);
 
       // 37.36970, -119.66325
-      final StaticMapProvider staticMapViewProvider = StaticMapProvider('AIzaSyBcz50gxQeynJ923eU9awz_gZuCrFVHn4M');
+      final StaticMapProvider staticMapViewProvider = StaticMapProvider(apiKey);
       final Uri staticMapUri = staticMapViewProvider.getStaticUriWithMarkers([
         Marker('position', 'Position', _locationData.latitude, _locationData.longitude)
       ], center: Location(_locationData.latitude, _locationData.longitude), width: 500, height: 300, maptype: StaticMapViewType.roadmap);

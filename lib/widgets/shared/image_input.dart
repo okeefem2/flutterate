@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:map_view/map_view.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:async';
-import '../../models/location_data.dart';
 import '../../models/product.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
